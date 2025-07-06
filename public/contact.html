@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact | GachaGoods Otaku Merch Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/font.otf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
+            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            background: rgba(255,255,255,0.93);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 40px 36px;
+            text-align: center;
+        }
+        h1 {
+            color: #7c3aed;
+            margin-bottom: 18px;
+        }
+        p {
+            color: #444;
+            font-size: 1.12em;
+            margin-bottom: 18px;
+        }
+        .contact-info {
+            margin-bottom: 32px;
+        }
+        .logo {
+            width: 80px;
+            margin-bottom: 18px;
+        }
+        .map-responsive {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        .map-responsive iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            border: 0;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container">
+        <img src="/logo.png" alt="GachaGoods Logo" class="logo" style="height:80px;width:auto;">
+        <h1>Contact Us</h1>
+        <div class="contact-info">
+            <p>
+                Have questions, suggestions, or need support?<br>
+                Reach out to us at <a href="mailto:support@gachagoods.com" style="color:#7c3aed;text-decoration:underline;">support@gachagoods.com</a><br>
+                or call us at <a href="tel:+1234567890" style="color:#7c3aed;text-decoration:underline;">+1 (234) 567-890</a>
+            </p>
+        </div>
+        <form style="max-width:600px;margin:0 auto 32px auto;text-align:left;">
+            <label for="name" style="color:#7c3aed;font-weight:bold;">Name</label><br>
+            <input type="text" id="name" name="name" required style="width:96%;padding:12px 14px;margin-bottom:18px;border-radius:6px;border:1px solid #ccc;font-size:1.08em;"><br>
+            <label for="message" style="color:#7c3aed;font-weight:bold;">Message</label><br>
+            <textarea id="message" name="message" rows="6" required style="width:96%;padding:12px 14px;border-radius:6px;border:1px solid #ccc;margin-bottom:18px;font-size:1.08em;resize:vertical;"></textarea><br>
+            <button type="submit" style="background:#7c3aed;color:#fff;border:none;border-radius:6px;padding:12px 32px;font-size:1.08em;cursor:pointer;">Send</button>
+        </form>
+        <div class="map-responsive">
+            <iframe src="https://www.google.com/maps?q=Kamiyama+High+school-mae&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script>
+        fetch('/header.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('header-placeholder').innerHTML = html);
+        fetch('/footer.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('footer-placeholder').innerHTML = html);
+    </script>
+</body>
+</html>

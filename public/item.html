@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Details | GachaGoods Otaku Merch Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/font.otf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
+            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            background: rgba(255,255,255,0.97);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 40px 36px;
+            text-align: center;
+        }
+        .item-img {
+            width: 260px;
+            height: 260px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            background: #f7f7fa;
+        }
+        .item-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #7c3aed;
+            margin-bottom: 12px;
+        }
+        .item-price {
+            color: #1e40af;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 18px;
+        }
+        .item-desc {
+            color: #444;
+            font-size: 1.08em;
+            margin-bottom: 24px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #7c3aed;
+            text-decoration: underline;
+            font-size: 1em;
+        }
+        .shop-item-btn {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 32px;
+            font-size: 1.08em;
+            cursor: pointer;
+            margin-top: 18px;
+            transition: background 0.15s;
+        }
+        .shop-item-btn:hover {
+            background: #5b21b6;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container" id="item-container">
+        <!-- Item details will be loaded here -->
+    </div>
+    <div id="footer-placeholder"></div>
+    <script>
+        fetch('/header.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('header-placeholder').innerHTML = html);
+
+        // Get item id from URL (/item/:id)
+        function getItemId() {
+            const match = window.location.pathname.match(/\/item\/(\d+)/);
+            return match ? match[1] : null;
+        }
+
+        const itemId = getItemId();
+        if (!itemId) {
+            document.getElementById('item-container').innerHTML = '<p>Invalid item.</p>';
+        } else {
+            fetch(`/api/item/${itemId}`)
+                .then(res => res.json())
+                .then(item => {
+                    if (!item || item.error) {
+                        document.getElementById('item-container').innerHTML = '<p>Item not found.</p>';
+                        return;
+                    }
+                    document.getElementById('item-container').innerHTML = `
+                        <a href="/shop" class="back-link">&larr; Back to Shop</a>
+                        <div>
+                            <img src="${item.image || '/default_product_image.jpg'}" alt="${item.name}" class="item-img">
+                        </div>
+                        <div class="item-title">${item.name}</div>
+                        <div class="item-price">₱${item.price}</div>
+                        <div class="item-desc">${item.description || ''}</div>
+                        <div style="margin-bottom:18px;">
+                            <span style="color:#7c3aed;font-weight:bold;">Category:</span>
+                            <span>${item.category_name || 'N/A'}</span>
+                            &nbsp;|&nbsp;
+                            <span style="color:#7c3aed;font-weight:bold;">Type:</span>
+                            <span>${item.type_name || 'N/A'}</span>
+                        </div>
+                        <button class="shop-item-btn">Add to Cart</button>
+                    `;
+                })
+                .catch(() => {
+                    document.getElementById('item-container').innerHTML = '<p>Failed to load item details.</p>';
+                });
+        }
+    </script>
+</body>
+</html>
