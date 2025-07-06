@@ -1,0 +1,619 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jul 06, 2025 at 03:26 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `gachagoods`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Hololive', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(2, 'Nijisanji', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(3, 'VShojo', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(4, 'Genshin Impact', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(5, 'Honkai: Star Rail', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(6, 'Fate/Grand Order', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(7, 'Azur Lane', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(8, 'BanG Dream!', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(9, 'Love Live!', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(10, 'Ensemble Stars!', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(11, 'Project SEKAI', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(12, 'Uma Musume', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(13, 'Re:Zero', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(14, 'Sword Art Online', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(15, 'Demon Slayer', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(16, 'Attack on Titan', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(17, 'My Hero Academia', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(18, 'One Piece', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(19, 'Naruto', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(20, 'Pokémon', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(21, 'Dragon Ball', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(22, 'Jujutsu Kaisen', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(23, 'Spy x Family', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(24, 'Chainsaw Man', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(25, 'Tokyo Revengers', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(26, 'Kantai Collection', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(27, 'Touhou Project', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(28, 'Vocaloid', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(29, 'Blue Archive', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(30, 'Idolmaster', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(31, 'Precure', '2025-07-04 02:04:33', '2025-07-04 02:04:33');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `items`
+--
+
+CREATE TABLE `items` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `category_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `type_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `items`
+--
+
+INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_id`, `created_at`, `updated_at`) VALUES
+(1, 'Aqua Minato Acrylic Stand', 'JbA2JDbv8u9pL3TBCNxzhxGqg4iVhmTBtnCxPO1T', 77.78, 15, 14, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(2, 'Kizuna AI Plushie', 'jIan8VbYk56FyGRGTD79x9TKID8nAByvqZmao5uE', 62.35, 17, 2, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(3, 'Rem Figure', '9dtIxCdBdtT295TF70dcD0rOY2DQTbmQZ27nxtCN', 44.31, 11, 17, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(4, 'Emilia Keychain', '5Q2HPUloL6Su4HkfTEtQwSIRHQuowjnWDyenGczN', 52.94, 13, 1, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(5, 'Megumin Badge', 'NVA7NyIPhKaXPNpsUQ50zlBSzvRhrhVuZswYCDhN', 42.29, 16, 13, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(6, 'Shiro T-shirt', '2CipxvdYeyCa9ksO54Ezen0Edlaf6Xr7xtbyALrN', 56.86, 6, 13, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(7, 'Kirito Hoodie', 'zhBgJPpxCdnm8prDLiHFvBycSnWq2VCN3RPBXP5s', 78.56, 10, 3, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(8, 'Asuna Poster', 'dzb5qsovVFAWcAE39ZA04xh6E0nRURPi6XGncEcj', 70.40, 12, 22, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(9, 'Zero Two Tapestry', 'cVpcEsNxOWdGA5z3zT3W5gbRAkXDOOcL87Av1tl7', 60.16, 17, 12, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(10, 'Nezuko Sticker', 'QiAU9jN9vfut6Wj6txtSnVck5aGiznsuRGFg6dT4', 98.49, 3, 7, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(11, 'Tanjiro Mug', 'QeVhHgseVj9HOjHR3R2e8XidlZpl1mIDpVw8uMLp', 93.04, 7, 4, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(12, 'Sakura Clear File', 'VRXwrSB5gbjq6He8g87Xhk2xmt3WUKDCnK3cY4qF', 55.33, 1, 16, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(13, 'Naruto Phone Case', 'BfW9bKFY8rPYLF4FpDvIbAZY64O9Jf2UgZHJvKqJ', 79.34, 4, 11, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(14, 'Gura Mousepad', 'cC5YOVzoiXQ2g3W1Z6uhRNn3QcvoJunokGCCxpI9', 69.74, 23, 24, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(15, 'Miko Art Book', 'ILetzOwJirrBEKRaAUWofwOhWhFEdijNbY4lCpFY', 31.65, 2, 5, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(16, 'Suisei CD', '2uRAtwxiPw5n8V90ywDXVRmsSAMRJPeQwN0N48sC', 83.65, 7, 22, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(17, 'Marine Blu-ray', 'JmoEdaJamax1jcUxLd2wq8mUZZNjR1LXjdGq3NG8', 60.82, 19, 13, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(18, 'Noel Cosplay Costume', 'rkHse3bwo34D66TEM2dPmQQgE8ZsozMW3UWUKjxe', 30.13, 15, 8, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(19, 'Kanata Pin', '2kaCeC8ir8y6rkwaGBkpNIP4TRQ2zK1cdm2IEXVV', 52.55, 11, 4, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(20, 'Okayu Wallet', 'tWXhLfOMAIJlGzITzyBLhAxt1CjtC77wQUQ882Vm', 44.69, 20, 3, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(21, 'Korone Bag', 'fhIqNsR0ajFFLx682DPvpWKbucHwyXcktYYITgGS', 62.69, 16, 3, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(22, 'Pekora Notebook', 'VpclND2Pl9VOcKFvNzCzk1KpR8xdOqVn6lj8K2m2', 79.84, 10, 16, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(23, 'Rushia Calendar', 'KkFSpN6202wVTRGvqMtrkdZ7SiVgAfNl1qFL1DpO', 90.90, 3, 18, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(24, 'Botan Gacha Capsule', 'tJNfHXgdp3IgWscRxQhb3YqYxIYYDThwHGVsQbc6', 43.41, 20, 18, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(25, 'Lamy Trading Card', 'Uk4RyIOyNAAUzbz9y0uz8Dju0yUGtreC6CEE4bqa', 85.15, 11, 6, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(27, 'Minecraft', 'Steve', 77.77, 2, 1, NULL, NULL),
+(28, 'Toto Natividad', 'Juche', 69.69, 17, 1, NULL, NULL),
+(29, 'NERO KEYCHAIN', 'HASHIRE SORI YO', 66.99, 6, 2, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `item_images`
+--
+
+CREATE TABLE `item_images` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `item_id` bigint(20) UNSIGNED NOT NULL,
+  `image_path` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `item_status`
+--
+
+CREATE TABLE `item_status` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `item_status`
+--
+
+INSERT INTO `item_status` (`id`, `name`) VALUES
+(4, 'Cancelled'),
+(3, 'Delivered'),
+(1, 'Pending'),
+(2, 'Processing'),
+(5, 'Returned');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '2012_06_08_000002_create_statuses_table', 1),
+(2, '2013_06_08_000003_create_roles_table', 1),
+(3, '2014_10_12_000000_create_users_table', 1),
+(4, '2014_10_12_100000_create_password_reset_tokens_table', 1),
+(5, '2019_08_19_000000_create_failed_jobs_table', 1),
+(6, '2019_12_14_000001_create_personal_access_tokens_table', 1),
+(7, '2024_06_08_000001_create_categories_table', 1),
+(8, '2024_06_08_000005_create_types_table', 1),
+(9, '2024_06_08_000007_create_items_table', 1),
+(10, '2024_06_08_000009_create_orders_table', 1),
+(11, '2024_06_08_000010_create_reviews_table', 1),
+(12, '2025_06_08_000004_create_item_images_table copy', 1),
+(13, '2025_06_09_000004_create_item_status_table', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `status_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `total` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_tokens`
+--
+
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `personal_access_tokens`
+--
+
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `item_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `rating` tinyint(3) UNSIGNED NOT NULL,
+  `comment` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`) VALUES
+(1, 'admin'),
+(2, 'customer');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statuses`
+--
+
+CREATE TABLE `statuses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `statuses`
+--
+
+INSERT INTO `statuses` (`id`, `name`) VALUES
+(1, 'Active'),
+(2, 'Inactive');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `types`
+--
+
+CREATE TABLE `types` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `types`
+--
+
+INSERT INTO `types` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Acrylic Stand', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(2, 'Keychain', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(3, 'Plushie', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(4, 'Figure', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(5, 'Badge', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(6, 'T-shirt', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(7, 'Hoodie', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(8, 'Poster', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(9, 'Tapestry', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(10, 'Sticker', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(11, 'Mug', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(12, 'Clear File', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(13, 'Phone Case', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(14, 'Mousepad', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(15, 'Art Book', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(16, 'CD', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(17, 'Blu-ray', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(18, 'Cosplay Costume', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(19, 'Pin', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(20, 'Wallet', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(21, 'Bag', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(22, 'Notebook', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(23, 'Calendar', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(24, 'Gacha Capsule', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(25, 'Trading Card', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(26, 'Wristband', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(27, 'Charm', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(28, 'Desk Mat', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(29, 'Bottle', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(30, 'Lanyard', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(31, 'Mask', '2025-07-04 02:04:33', '2025-07-04 02:04:33');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `status_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `role_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `remember_token` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `status_id`, `role_id`, `remember_token`) VALUES
+(1, 'Admin Gacha', 'admin@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$o20zYP8r3S/p3sfRzyctHu7ypWse1FY1LCLH.CwDa5An1bMCBx75.', 1, 1, NULL),
+(2, 'Aqua Minato', 'aqua@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$oe6lqaFN5a1ODOyDF6xdserOc9/IYnsj3denoFo3VaAjN/oDukmLe', 1, 2, NULL),
+(3, 'Kizuna AI', 'kizuna@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$nqVAFpTSgKDf41OavW8JRuzbknKCzEc8Xljextqj8zmJxoX6yKHTe', 1, 2, NULL),
+(4, 'Rem', 'rem@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$f2Sr.o59jcWOew/bjJ8qVu.haizg3HMpa9KJlZDxn9Y.WVG0.5hMW', 1, 2, NULL),
+(5, 'Emilia', 'emilia@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$eB3UtqAi214c6wH12ufuMO3qWsNNXP.X1bKsV21l6orGO.aFt/5gq', 1, 2, NULL),
+(6, 'Megumin', 'megumin@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$ssDo37Dua5DcjmvH5qnESuulUnVJl0Kd5xtn2h6LdMWC0H4xGGIk2', 1, 2, NULL),
+(7, 'Shiro', 'shiro@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$NzI.2xk24fhzHS5c3s3HH.2DECfQmcUPNVRpnWIPgGiUcMEMIvC1e', 1, 2, NULL),
+(8, 'Kirito', 'kirito@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$9qg5DxBGphrey3FQlg.NOelxZj3BOFFVNP2v8nyjv09SaIV0IrfgO', 1, 2, NULL),
+(9, 'Asuna', 'asuna@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$10clgUNRZ.MPh69jLaE5BOc2YHC.63AGS0sNy1Tv609RL0ktV6gEy', 1, 2, NULL),
+(10, 'Zero Two', 'zerotwo@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$ybVv9e/qNasKg8kQ6bZg/ejS04H3kE9uP8W8CiKMpu5oaNWyEu0Ee', 1, 2, NULL),
+(11, 'Nezuko', 'nezuko@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$CS1EILZd3mefvLOugJNy/upjJtTB9xIq8x040LCoHFbbFWR7vkBuK', 1, 2, NULL),
+(12, 'Tanjiro', 'tanjiro@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$OTHItZ9KBipIatcp/sTXy.zLpkbQSrpOVIAv967hy3.eSil6jbSqi', 1, 2, NULL),
+(13, 'Sakura', 'sakura@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$cnhGwuCnzQSXCBd5X4TNz.L.3NW8j8OhF2Wl6SL8F0MKw9pOIJU5q', 1, 2, NULL),
+(14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2y$10$AP0xtamjWRvvXIh9UIsLfeaV8ninY3dPArCLvIoa2bnw11rNZnUvS', 1, 2, NULL),
+(15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2y$10$VJQNlg37PJfc6QbxWm811.fyLQqAX0RJnE9n1rzhoWCFGtDXYxREi', 2, 2, NULL);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `categories_name_unique` (`name`);
+
+--
+-- Indexes for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indexes for table `items`
+--
+ALTER TABLE `items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `items_category_id_foreign` (`category_id`),
+  ADD KEY `items_type_id_foreign` (`type_id`);
+
+--
+-- Indexes for table `item_images`
+--
+ALTER TABLE `item_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `item_images_item_id_foreign` (`item_id`);
+
+--
+-- Indexes for table `item_status`
+--
+ALTER TABLE `item_status`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `item_status_name_unique` (`name`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_user_id_foreign` (`user_id`),
+  ADD KEY `orders_status_id_foreign` (`status_id`);
+
+--
+-- Indexes for table `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indexes for table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
+
+--
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reviews_item_id_foreign` (`item_id`),
+  ADD KEY `reviews_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `roles_name_unique` (`name`);
+
+--
+-- Indexes for table `statuses`
+--
+ALTER TABLE `statuses`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `statuses_name_unique` (`name`);
+
+--
+-- Indexes for table `types`
+--
+ALTER TABLE `types`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `types_name_unique` (`name`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD KEY `users_status_id_foreign` (`status_id`),
+  ADD KEY `users_role_id_foreign` (`role_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `items`
+--
+ALTER TABLE `items`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `item_images`
+--
+ALTER TABLE `item_images`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `item_status`
+--
+ALTER TABLE `item_status`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `statuses`
+--
+ALTER TABLE `statuses`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `types`
+--
+ALTER TABLE `types`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `items`
+--
+ALTER TABLE `items`
+  ADD CONSTRAINT `items_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `items_type_id_foreign` FOREIGN KEY (`type_id`) REFERENCES `types` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `item_images`
+--
+ALTER TABLE `item_images`
+  ADD CONSTRAINT `item_images_item_id_foreign` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `statuses` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `orders_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `reviews_item_id_foreign` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reviews_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `users_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `statuses` (`id`) ON DELETE SET NULL;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
