@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/font.otf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
+            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        .container { max-width: 1200px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 32px; }
+        h1 { color: #7c3aed; text-align: center; margin-bottom: 32px; }
+        .dt-buttons { margin-bottom: 16px; }
+        .modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background: rgba(0,0,0,0.3);}
+        .modal-content { background: #fff; margin: 60px auto; padding: 24px 32px; border-radius: 8px; width: 400px; position: relative; }
+        .close { position: absolute; right: 16px; top: 12px; font-size: 22px; cursor: pointer; }
+        label { display: block; margin-top: 12px; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 4px; border-radius: 5px; border: 1px solid #ccc; }
+        button { background: #7c3aed; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-size: 1em; cursor: pointer; margin-top: 16px;}
+        button:hover { background: #5b21b6; }
+        .actions-btns button { margin-right: 6px; }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container">
+        <h1>Manage Products</h1>
+        <button id="addProductBtn">Add Product</button>
+        <table id="productsTable" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="footer-placeholder"></div>
+    <!-- Modal for Add/Edit -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Add Product</h2>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <label>Name <input type="text" id="productName" required></label>
+                <label>Description <textarea id="productDesc" required></textarea></label>
+                <label>Price <input type="number" id="productPrice" min="0" step="0.01" required></label>
+                <label>Category
+                    <select id="productCategory" required></select>
+                </label>
+                <label>Type
+                    <select id="productType" required></select>
+                </label>
+                <button type="submit" id="saveProductBtn">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- jQuery & DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        // Dynamically load header and footer
+        fetch('/header.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('header-placeholder').innerHTML = html);
+
+        let categories = [];
+        let types = [];
+
+        function fetchCategoriesAndTypes() {
+            return Promise.all([
+                $.get('/api/categories').then(data => { categories = data; }),
+                $.get('/api/types').then(data => { types = data; })
+            ]);
+        }
+
+        function fillSelectOptions() {
+            $('#productCategory').html(categories.map(c => `<option value="${c.id}">${c.name}</option>`).join(''));
+            $('#productType').html(types.map(t => `<option value="${t.id}">${t.name}</option>`).join(''));
+        }
+
+        $(document).ready(function() {
+            fetchCategoriesAndTypes().then(() => {
+                fillSelectOptions();
+
+                const table = $('#productsTable').DataTable({
+                    ajax: {
+                        url: '/api/items/with-names',
+                        dataSrc: ''
+                    },
+                    columns: [
+                        { data: 'id' },
+                        { data: 'name' },
+                        { data: 'description' },
+                        { data: 'price' },
+                        { data: 'category_name' },
+                        { data: 'type_name' },
+                        {
+                            data: null,
+                            orderable: false,
+                            render: function(data, type, row) {
+                                return `
+                                    <div class="actions-btns">
+                                        <button class="editBtn" data-id="${row.id}">Edit</button>
+                                        <button class="deleteBtn" data-id="${row.id}">Delete</button>
+                                    </div>
+                                `;
+                            }
+                        }
+                    ]
+                });
+
+                // Add Product
+                $('#addProductBtn').on('click', function() {
+                    $('#modalTitle').text('Add Product');
+                    $('#productForm')[0].reset();
+                    $('#productId').val('');
+                    fillSelectOptions();
+                    $('#productModal').show();
+                });
+
+                // Edit Product
+                $('#productsTable').on('click', '.editBtn', function() {
+                    const id = $(this).data('id');
+                    $.get(`/api/item/${id}`, function(item) {
+                        $('#modalTitle').text('Edit Product');
+                        $('#productId').val(item.id);
+                        $('#productName').val(item.name);
+                        $('#productDesc').val(item.description);
+                        $('#productPrice').val(item.price);
+                        $('#productCategory').val(item.category_id);
+                        $('#productType').val(item.type_id);
+                        $('#productModal').show();
+                    });
+                });
+
+                // Delete Product
+                $('#productsTable').on('click', '.deleteBtn', function() {
+                    const id = $(this).data('id');
+                    if (confirm('Delete this product?')) {
+                        $.ajax({
+                            url: `/api/items/${id}`,
+                            type: 'DELETE',
+                            success: function() {
+                                table.ajax.reload();
+                            },
+                            error: function() {
+                                alert('Failed to delete.');
+                            }
+                        });
+                    }
+                });
+
+                // Close Modal
+                $('#closeModal').on('click', function() {
+                    $('#productModal').hide();
+                });
+                $(window).on('click', function(e) {
+                    if (e.target == document.getElementById('productModal')) {
+                        $('#productModal').hide();
+                    }
+                });
+
+                // Save Product (Add/Edit)
+                $('#productForm').on('submit', function(e) {
+                    e.preventDefault();
+                    const id = $('#productId').val();
+                    const data = {
+                        name: $('#productName').val(),
+                        description: $('#productDesc').val(),
+                        price: $('#productPrice').val(),
+                        category_id: $('#productCategory').val(),
+                        type_id: $('#productType').val()
+                    };
+                    if (id) {
+                        // Edit
+                        $.ajax({
+                            url: `/api/items/${id}`,
+                            type: 'PUT',
+                            contentType: 'application/json',
+                            data: JSON.stringify(data),
+                            success: function() {
+                                $('#productModal').hide();
+                                table.ajax.reload();
+                            },
+                            error: function() {
+                                alert('Failed to update.');
+                            }
+                        });
+                    } else {
+                        // Add
+                        $.ajax({
+                            url: '/api/items',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(data),
+                            success: function() {
+                                $('#productModal').hide();
+                                table.ajax.reload();
+                            },
+                            error: function() {
+                                alert('Failed to add.');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

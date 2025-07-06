@@ -88,11 +88,62 @@
             align-items: center;
             margin-top: 10px;
         }
+        .manage-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        .manage-btn {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .manage-btn:hover, .manage-btn:focus {
+            background: #5b21b6;
+        }
+        .manage-dropdown-content {
+            display: none;
+            position: absolute;
+            background: #fff;
+            min-width: 180px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+            border-radius: 8px;
+            z-index: 1;
+            right: 0;
+        }
+        .manage-dropdown-content a {
+            color: #333;
+            padding: 12px 18px;
+            text-decoration: none;
+            display: block;
+            border-radius: 8px;
+            transition: background 0.13s;
+        }
+        .manage-dropdown-content a:hover {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+        .manage-dropdown.show .manage-dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
     <div class="container">
+        <div class="manage-dropdown" id="manageDropdown">
+            <button class="manage-btn" onclick="toggleManageDropdown()">Manage ▼</button>
+            <div class="manage-dropdown-content">
+                <a href="/manage/products">Manage Products</a>
+                <a href="/manage/categories">Manage Categories</a>
+                <a href="/manage/types">Manage Types</a>
+            </div>
+        </div>
         <h1>Shop</h1>
         <div id="shop-grid" class="shop-grid">
             <!-- Items will be loaded here -->
@@ -100,6 +151,17 @@
     </div>
     <div id="footer-placeholder"></div>
     <script>
+        function toggleManageDropdown() {
+            document.getElementById('manageDropdown').classList.toggle('show');
+        }
+        // Close dropdown if clicked outside
+        window.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('manageDropdown');
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
         fetch('/header.html')
             .then(res => res.text())
             .then(html => document.getElementById('header-placeholder').innerHTML = html);
