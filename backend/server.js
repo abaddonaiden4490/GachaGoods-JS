@@ -157,6 +157,78 @@ app.delete('/api/items/:id', (req, res) => {
   );
 });
 
+// Add Category with custom id (PUT /api/categories/:id)
+app.put('/api/categories/:id', (req, res, next) => {
+  if (req.body && req.body.create === true) {
+    // Create new category with specified id
+    const { id } = req.params;
+    const { name } = req.body;
+    db.query(
+      'INSERT INTO categories (id, name, created_at, updated_at) VALUES (?, ?, NOW(), NOW())',
+      [id, name],
+      (err, result) => {
+        if (err) {
+          res.status(500).json({ error: 'Database error' });
+        } else {
+          res.status(201).json({ id: Number(id), name });
+        }
+      }
+    );
+  } else {
+    // Edit existing category
+    const { name } = req.body;
+    db.query(
+      'UPDATE categories SET name=?, updated_at=NOW() WHERE id=?',
+      [name, req.params.id],
+      (err, result) => {
+        if (err) {
+          res.status(500).json({ error: 'Database error' });
+        } else if (result.affectedRows === 0) {
+          res.status(404).json({ error: 'Category not found' });
+        } else {
+          res.json({ success: true });
+        }
+      }
+    );
+  }
+});
+
+// Add Type with custom id (PUT /api/types/:id)
+app.put('/api/types/:id', (req, res, next) => {
+  if (req.body && req.body.create === true) {
+    // Create new type with specified id
+    const { id } = req.params;
+    const { name } = req.body;
+    db.query(
+      'INSERT INTO types (id, name, created_at, updated_at) VALUES (?, ?, NOW(), NOW())',
+      [id, name],
+      (err, result) => {
+        if (err) {
+          res.status(500).json({ error: 'Database error' });
+        } else {
+          res.status(201).json({ id: Number(id), name });
+        }
+      }
+    );
+  } else {
+    // Edit existing type
+    const { name } = req.body;
+    db.query(
+      'UPDATE types SET name=?, updated_at=NOW() WHERE id=?',
+      [name, req.params.id],
+      (err, result) => {
+        if (err) {
+          res.status(500).json({ error: 'Database error' });
+        } else if (result.affectedRows === 0) {
+          res.status(404).json({ error: 'Type not found' });
+        } else {
+          res.json({ success: true });
+        }
+      }
+    );
+  }
+});
+
 // Serve manage pages
 app.get('/manage/products', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'products.html'));

@@ -77,6 +77,8 @@
     <!-- jQuery & DataTables -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- jQuery Validation plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script>
         // Dynamically load header and footer
         fetch('/header.html')
@@ -180,9 +182,74 @@
                     }
                 });
 
+                // jQuery Validation setup for product form
+                $('#productForm').validate({
+                    rules: {
+                        productName: {
+                            required: true,
+                            minlength: 2,
+                            maxlength: 100
+                        },
+                        productDesc: {
+                            required: true,
+                            minlength: 2,
+                            maxlength: 500
+                        },
+                        productPrice: {
+                            required: true,
+                            number: true,
+                            min: 0
+                        },
+                        productCategory: {
+                            required: true
+                        },
+                        productType: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        productName: {
+                            required: "Please enter a product name",
+                            minlength: "Name must be at least 2 characters",
+                            maxlength: "Name must be less than 100 characters"
+                        },
+                        productDesc: {
+                            required: "Please enter a description",
+                            minlength: "Description must be at least 2 characters",
+                            maxlength: "Description must be less than 500 characters"
+                        },
+                        productPrice: {
+                            required: "Please enter a price",
+                            number: "Please enter a valid number",
+                            min: "Price cannot be negative"
+                        },
+                        productCategory: {
+                            required: "Please select a category"
+                        },
+                        productType: {
+                            required: "Please select a type"
+                        }
+                    },
+                    errorClass: "is-invalid",
+                    validClass: "is-valid",
+                    errorPlacement: function(error, element) {
+                        error.addClass('invalid-feedback');
+                        error.insertAfter(element);
+                    },
+                    highlight: function(element) {
+                        $(element).addClass('is-invalid').removeClass('is-valid');
+                    },
+                    unhighlight: function(element) {
+                        $(element).removeClass('is-invalid').addClass('is-valid');
+                    }
+                });
+
                 // Save Product (Add/Edit)
                 $('#productForm').on('submit', function(e) {
                     e.preventDefault();
+                    if (!$('#productForm').valid()) {
+                        return;
+                    }
                     const id = $('#productId').val();
                     const data = {
                         name: $('#productName').val(),
