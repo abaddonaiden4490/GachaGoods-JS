@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 06, 2025 at 03:26 PM
+-- Generation Time: Jul 08, 2025 at 07:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -69,7 +69,8 @@ INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (28, 'Vocaloid', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (29, 'Blue Archive', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (30, 'Idolmaster', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
-(31, 'Precure', '2025-07-04 02:04:33', '2025-07-04 02:04:33');
+(31, 'Precure', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(32, 'D4DJ', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -135,8 +136,10 @@ INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_
 (24, 'Botan Gacha Capsule', 'tJNfHXgdp3IgWscRxQhb3YqYxIYYDThwHGVsQbc6', 43.41, 20, 18, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (25, 'Lamy Trading Card', 'Uk4RyIOyNAAUzbz9y0uz8Dju0yUGtreC6CEE4bqa', 85.15, 11, 6, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (27, 'Minecraft', 'Steve', 77.77, 2, 1, NULL, NULL),
-(28, 'Toto Natividad', 'Juche', 69.69, 17, 1, NULL, NULL),
-(29, 'NERO KEYCHAIN', 'HASHIRE SORI YO', 66.99, 6, 2, NULL, NULL);
+(28, 'Toto Natividad', 'director ng mga movie ni cesar montano. eyyyy', 69.69, 17, 1, NULL, NULL),
+(29, 'NERO KEYCHAIN', 'HASHIRE SORI YO', 66.99, 6, 2, NULL, NULL),
+(32, 'Nico Yazawa Plush.', 'nico nico niii', 99.99, 9, 3, NULL, NULL),
+(33, 'Rinku Aimoto Plush', 'fumo plushie cute', 99.99, 8, 3, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -501,7 +504,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -513,7 +516,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `item_images`
