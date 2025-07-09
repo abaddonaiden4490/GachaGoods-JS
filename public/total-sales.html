@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Total Sales Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/font.otf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
+            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        #header-placeholder {
+            width: 100%;
+            background: #7c3aed;
+            color: #fff;
+            min-height: 60px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 48px auto 48px auto;
+            background: rgba(255,255,255,0.93);
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 36px 28px 36px 28px;
+        }
+        .logo {
+            width: 80px;
+            margin-bottom: 18px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 {
+            color: #7c3aed;
+            text-align: center;
+            font-size: 2.2rem;
+            margin: 0 0 24px 0;
+            letter-spacing: 1px;
+            font-weight: 600;
+            text-shadow: 0 2px 8px #e9d5ff;
+        }
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 28px;
+        }
+        .chart-box {
+            background: rgba(124, 58, 237, 0.10);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #7c3aed22;
+            padding: 18px 18px 12px 18px;
+            width: 520px;
+            min-width: 320px;
+            min-height: 420px;
+            color: #7c3aed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chart-box h2 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #7c3aed;
+            margin: 0 0 10px 0;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 4px #e9d5ff;
+        }
+        canvas {
+            background: transparent;
+            margin: 0 auto;
+            min-height: 340px;
+            min-width: 480px;
+            max-width: 100%;
+        }
+        @media (max-width: 1700px) {
+            .charts-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .chart-box {
+                width: 95vw;
+                min-width: 0;
+            }
+            canvas {
+                min-width: 0;
+                width: 100% !important;
+            }
+        }
+        #footer-placeholder {
+            background: #f3f0ff;
+            color: #7c3aed;
+            text-align: center;
+            padding: 18px 0 12px 0;
+            font-size: 0.98em;
+            margin-top: 48px;
+            border-top: 1px solid #ececec;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container">
+        <img src="/logo.png" alt="GachaGoods Logo" class="logo" style="height:100px;width:auto;">
+        <h1>Total Sales Dashboard</h1>
+        <div class="charts-container">
+            <div class="chart-box">
+                <h2>Sales by Item</h2>
+                <canvas id="itemsBarChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h2>Sales by Category</h2>
+                <canvas id="categoriesLineChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h2>Sales by Type</h2>
+                <canvas id="typesPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script>
+        // Fetch the external header and footer files and load them into the placeholders
+        fetch('/header.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('header-placeholder').innerHTML = html);
+
+        // Sample data for demonstration
+        const items = [
+            "Aqua Minato Acrylic Stand", "Kizuna AI Plushie", "Rem Figure", "Emilia Keychain", "Megumin Badge",
+            "Shiro T-shirt", "Kirito Hoodie", "Asuna Poster", "Zero Two Tapestry", "Nezuko Sticker",
+            "Tanjiro Mug", "Sakura Clear File", "Naruto Phone Case", "Gura Mousepad", "Miko Art Book",
+            "Suisei CD", "Marine Blu-ray", "Noel Cosplay Costume", "Kanata Pin", "Okayu Wallet",
+            "Korone Bag", "Pekora Notebook", "Rushia Calendar", "Botan Gacha Capsule", "Lamy Trading Card",
+            "Minecraft", "Toto Natividad", "NERO KEYCHAIN", "Nico Yazawa Plush.", "Rinku Aimoto Plush"
+        ];
+        const categories = [
+            "Attack on Titan", "Azur Lane", "BanG Dream!", "Blue Archive", "Chainsaw Man", "D4DJ", "Demon Slayer",
+            "Dragon Ball", "Ensemble Stars!", "Fate/Grand Order", "Genshin Impact", "Hololive", "Honkai: Star Rail",
+            "Idolmaster", "Jujutsu Kaisen", "Kantai Collection", "Love Live!", "My Hero Academia", "Naruto",
+            "Nijisanji", "One Piece", "Pokémon", "Precure", "Project SEKAI", "Re:Zero", "Spy x Family",
+            "Sword Art Online", "Tokyo Revengers", "Touhou Project", "Uma Musume", "Vocaloid", "VShojo"
+        ];
+        const types = [
+            "Acrylic Stand", "Art Book", "Badge", "Bag", "Blu-ray", "Bottle", "Calendar", "CD", "Charm",
+            "Clear File", "Cosplay Costume", "Desk Mat", "Figure", "Gacha Capsule", "Hoodie", "Keychain",
+            "Lanyard", "Mask", "Mousepad", "Mug", "Notebook", "Phone Case", "Pin", "Plushie", "Poster",
+            "Sticker", "T-shirt", "Tapestry", "Trading Card", "Wallet", "Wristband"
+        ];
+
+        // Fixed data for demonstration (values between 10 and 100)
+        const itemsData = [
+            95, 67, 88, 54, 73, 61, 80, 42, 100, 58,
+            77, 69, 90, 55, 62, 81, 47, 99, 53, 76,
+            60, 85, 49, 97, 66, 78, 59, 92, 63, 87
+        ];
+        const categoriesData = [
+            98, 65, 77, 54, 83, 91, 62, 100, 58, 73,
+            80, 47, 99, 53, 76, 60, 85, 49, 97, 66,
+            78, 59, 92, 63, 87, 95, 67, 88, 61, 42, 90
+        ];
+        const typesData = [
+            55, 67, 80, 92, 44, 73, 61, 88, 53, 100,
+            58, 77, 69, 90, 55, 62, 81, 47, 99, 53,
+            76, 60, 85, 49, 97, 66, 78, 59, 63, 87, 95
+        ];
+
+        // Bar Chart: Items
+        new Chart(document.getElementById('itemsBarChart'), {
+            type: 'bar',
+            data: {
+                labels: items,
+                datasets: [{
+                    label: 'Units Sold',
+                    data: itemsData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false }
+                },
+                scales: {
+                    x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Line Chart: Categories
+        new Chart(document.getElementById('categoriesLineChart'), {
+            type: 'line',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: 'Total Sales',
+                    data: categoriesData,
+                    fill: false,
+                    borderColor: 'rgba(255, 99, 132, 0.8)',
+                    tension: 0.3,
+                    pointBackgroundColor: 'rgba(255, 99, 132, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false }
+                },
+                scales: {
+                    x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Pie Chart: Types
+        new Chart(document.getElementById('typesPieChart'), {
+            type: 'pie',
+            data: {
+                labels: types,
+                datasets: [{
+                    label: 'Sales Share',
+                    data: typesData,
+                    backgroundColor: types.map((_, i) =>
+                        `hsl(${i * 360 / types.length}, 70%, 60%)`
+                    )
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'right' },
+                    title: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -32,6 +32,10 @@ app.get('/register', (req, res) => {
   res.sendFile('register.html', { root: 'public' });
 });
 
+app.get('/total-sales', (req, res) => {
+  res.sendFile('total-sales.html', { root: 'public' });
+});
+
 // API endpoint to get items from the database
 app.get('/api/items', (req, res) => {
   db.query('SELECT * FROM items', (err, results) => {
