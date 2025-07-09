@@ -150,6 +150,7 @@
         </div>
     </div>
     <div id="footer-placeholder"></div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         function toggleManageDropdown() {
             document.getElementById('manageDropdown').classList.toggle('show');
@@ -166,30 +167,64 @@
             .then(res => res.text())
             .then(html => document.getElementById('header-placeholder').innerHTML = html);
 
-        // Fetch items from backend API and render them
-        fetch('/api/items')
-            .then(res => res.json())
-            .then(items => {
-                const grid = document.getElementById('shop-grid');
-                if (!items.length) {
-                    grid.innerHTML = '<p>No items found.</p>';
-                    return;
-                }
-                grid.innerHTML = items.map(item => `
-                    <div class="shop-item">
-                        <img src="${item.image || '/default_product_image.jpg'}" alt="${item.name}">
-                        <div class="shop-item-title">${item.name}</div>
-                        <div class="shop-item-price">₱${item.price}</div>
-                        <div class="shop-item-actions">
-                            <button class="shop-item-btn" onclick="window.location='/item/${item.id}'">Item Details</button>
-                            <button class="shop-item-btn">Add to Cart</button>
-                        </div>
+        // Infinite scroll variables
+        let page = 1;
+        const limit = 6;
+        let loading = false;
+        let endReached = false;
+
+        function renderItems(items) {
+            if (!items.length) return;
+            const html = items.map(item => `
+                <div class="shop-item">
+                    <img src="${item.image || '/default_product_image.jpg'}" alt="${item.name}">
+                    <div class="shop-item-title">${item.name}</div>
+                    <div class="shop-item-price">₱${item.price}</div>
+                    <div class="shop-item-actions">
+                        <button class="shop-item-btn" onclick="window.location='/item/${item.id}'">Item Details</button>
+                        <button class="shop-item-btn">Add to Cart</button>
                     </div>
-                `).join('');
-            })
-            .catch(() => {
-                document.getElementById('shop-grid').innerHTML = '<p>Failed to load items.</p>';
+                </div>
+            `).join('');
+            $('#shop-grid').append(html);
+        }
+
+        function loadItems() {
+            if (loading || endReached) return;
+            loading = true;
+            $('#shop-grid').append('<div id="loading-indicator" style="width:100%;text-align:center;padding:18px 0;color:#7c3aed;">Loading...</div>');
+            $.get(`/api/items?page=${page}&limit=${limit}`)
+                .done(function(items) {
+                    $('#loading-indicator').remove();
+                    if (!items.length) {
+                        endReached = true;
+                        if (page === 1) $('#shop-grid').html('<p>No items found.</p>');
+                        return;
+                    }
+                    renderItems(items);
+                    if (items.length < limit) endReached = true;
+                    page++;
+                })
+                .fail(function() {
+                    $('#loading-indicator').remove();
+                    if (page === 1) $('#shop-grid').html('<p>Failed to load items.</p>');
+                })
+                .always(function() {
+                    loading = false;
+                });
+        }
+
+        $(document).ready(function() {
+            // Clear grid before first load to ensure only first 6 items are shown initially
+            $('#shop-grid').empty();
+            loadItems();
+            $(window).on('scroll', function() {
+                if (loading || endReached) return;
+                if ($(window).scrollTop() + $(window).height() + 200 >= $(document).height()) {
+                    loadItems();
+                }
             });
+        });
     </script>
 </body>
 </html>
