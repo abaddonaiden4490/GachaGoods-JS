@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 08, 2025 at 07:11 AM
+-- Generation Time: Jul 10, 2025 at 07:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -366,29 +366,29 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `status_id` bigint(20) UNSIGNED DEFAULT NULL,
   `role_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `remember_token` varchar(100) DEFAULT NULL
+  `auth_token` varchar(512) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `status_id`, `role_id`, `remember_token`) VALUES
-(1, 'Admin Gacha', 'admin@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$o20zYP8r3S/p3sfRzyctHu7ypWse1FY1LCLH.CwDa5An1bMCBx75.', 1, 1, NULL),
-(2, 'Aqua Minato', 'aqua@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$oe6lqaFN5a1ODOyDF6xdserOc9/IYnsj3denoFo3VaAjN/oDukmLe', 1, 2, NULL),
-(3, 'Kizuna AI', 'kizuna@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$nqVAFpTSgKDf41OavW8JRuzbknKCzEc8Xljextqj8zmJxoX6yKHTe', 1, 2, NULL),
-(4, 'Rem', 'rem@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$f2Sr.o59jcWOew/bjJ8qVu.haizg3HMpa9KJlZDxn9Y.WVG0.5hMW', 1, 2, NULL),
-(5, 'Emilia', 'emilia@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$eB3UtqAi214c6wH12ufuMO3qWsNNXP.X1bKsV21l6orGO.aFt/5gq', 1, 2, NULL),
-(6, 'Megumin', 'megumin@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$ssDo37Dua5DcjmvH5qnESuulUnVJl0Kd5xtn2h6LdMWC0H4xGGIk2', 1, 2, NULL),
-(7, 'Shiro', 'shiro@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$NzI.2xk24fhzHS5c3s3HH.2DECfQmcUPNVRpnWIPgGiUcMEMIvC1e', 1, 2, NULL),
-(8, 'Kirito', 'kirito@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$9qg5DxBGphrey3FQlg.NOelxZj3BOFFVNP2v8nyjv09SaIV0IrfgO', 1, 2, NULL),
-(9, 'Asuna', 'asuna@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$10clgUNRZ.MPh69jLaE5BOc2YHC.63AGS0sNy1Tv609RL0ktV6gEy', 1, 2, NULL),
-(10, 'Zero Two', 'zerotwo@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$ybVv9e/qNasKg8kQ6bZg/ejS04H3kE9uP8W8CiKMpu5oaNWyEu0Ee', 1, 2, NULL),
-(11, 'Nezuko', 'nezuko@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$CS1EILZd3mefvLOugJNy/upjJtTB9xIq8x040LCoHFbbFWR7vkBuK', 1, 2, NULL),
-(12, 'Tanjiro', 'tanjiro@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$OTHItZ9KBipIatcp/sTXy.zLpkbQSrpOVIAv967hy3.eSil6jbSqi', 1, 2, NULL),
-(13, 'Sakura', 'sakura@gachagoods.com', '2025-07-04 02:04:32', '$2y$10$cnhGwuCnzQSXCBd5X4TNz.L.3NW8j8OhF2Wl6SL8F0MKw9pOIJU5q', 1, 2, NULL),
-(14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2y$10$AP0xtamjWRvvXIh9UIsLfeaV8ninY3dPArCLvIoa2bnw11rNZnUvS', 1, 2, NULL),
-(15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2y$10$VJQNlg37PJfc6QbxWm811.fyLQqAX0RJnE9n1rzhoWCFGtDXYxREi', 2, 2, NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `status_id`, `role_id`, `auth_token`) VALUES
+(1, 'Admin Gacha', 'admin@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 1, NULL),
+(2, 'Aqua Minato', 'aqua@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(3, 'Kizuna AI', 'kizuna@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(4, 'Rem', 'rem@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(5, 'Emilia', 'emilia@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(6, 'Megumin', 'megumin@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(7, 'Shiro', 'shiro@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(8, 'Kirito', 'kirito@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(9, 'Asuna', 'asuna@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(10, 'Zero Two', 'zerotwo@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(11, 'Nezuko', 'nezuko@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(12, 'Tanjiro', 'tanjiro@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(13, 'Sakura', 'sakura@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL);
 
 --
 -- Indexes for dumped tables
