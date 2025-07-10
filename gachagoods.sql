@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 10, 2025 at 07:57 AM
+-- Generation Time: Jul 10, 2025 at 02:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -70,7 +70,8 @@ INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (29, 'Blue Archive', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (30, 'Idolmaster', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (31, 'Precure', '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
-(32, 'D4DJ', NULL, NULL);
+(32, 'D4DJ', NULL, NULL),
+(34, 'Zenless Zone Zero', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -110,7 +111,7 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_id`, `created_at`, `updated_at`) VALUES
-(1, 'Aqua Minato Acrylic Stand', 'JbA2JDbv8u9pL3TBCNxzhxGqg4iVhmTBtnCxPO1T', 77.78, 15, 14, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
+(1, 'Yuuki Sakuna Acrylic Stand', 'JbA2JDbv8u9pL3TBCNxzhxGqg4iVhmTBtnCxPO1T', 77.78, 15, 14, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (2, 'Kizuna AI Plushie', 'jIan8VbYk56FyGRGTD79x9TKID8nAByvqZmao5uE', 62.35, 17, 2, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (3, 'Rem Figure', '9dtIxCdBdtT295TF70dcD0rOY2DQTbmQZ27nxtCN', 44.31, 11, 17, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
 (4, 'Emilia Keychain', '5Q2HPUloL6Su4HkfTEtQwSIRHQuowjnWDyenGczN', 52.94, 13, 1, '2025-07-04 02:04:33', '2025-07-04 02:04:33'),
@@ -140,9 +141,11 @@ INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_
 (29, 'NERO KEYCHAIN', 'HASHIRE SORI YO', 66.99, 6, 2, NULL, NULL),
 (32, 'Nico Yazawa Plush.', 'nico nico niii', 99.99, 9, 3, NULL, NULL),
 (33, 'Rinku Aimoto Plush', 'fumo plushie cute', 99.99, 8, 3, NULL, NULL),
-(38, 'efef', 'glafenine', 99.99, 16, 1, NULL, NULL),
+(38, 'Uraraka', 'Ochaco', 99.99, 17, 1, NULL, NULL),
 (39, 'EMU OTORi PLUSH DOLL', 'Wonderhoyism', 99.99, 11, 3, NULL, NULL),
-(40, 'titan cart', 'ello', 88.88, 16, 18, NULL, NULL);
+(40, 'Cart Titan Cosplay Costume', 'ZAZAGEYOHHH!!!!!! AAAAHHHHHH!!!!', 69.69, 16, 18, NULL, NULL),
+(41, 'Emu Otori Jacket w/ Hoodie', 'Feat. Ichika Hoshino. Wonderhoy!!!!', 99.99, 11, 7, NULL, NULL),
+(42, 'Gerald', 'mabaho', 69.99, 16, 30, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -155,6 +158,16 @@ CREATE TABLE `item_images` (
   `item_id` bigint(20) UNSIGNED NOT NULL,
   `image_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `item_images`
+--
+
+INSERT INTO `item_images` (`id`, `item_id`, `image_path`) VALUES
+(1, 41, '/uploads/1752141279900.jpg'),
+(2, 42, '/uploads/1752142776990.jpg'),
+(3, 42, '/uploads/1752142777003.jpg'),
+(4, 42, '/uploads/1752142777013.jpg');
 
 -- --------------------------------------------------------
 
@@ -391,7 +404,8 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (12, 'Tanjiro', 'tanjiro@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (13, 'Sakura', 'sakura@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
-(15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL);
+(15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL),
+(16, 'Piad', 'evanpiad05@gmail.com', NULL, '$2b$10$gbcca1Ae0TcJtJIQmmXGBejJBah9rX73UdE7iNeP01fm1pXStVlDS', 1, 2, NULL);
 
 --
 -- Indexes for dumped tables
@@ -507,7 +521,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -519,13 +533,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `item_images`
 --
 ALTER TABLE `item_images`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `item_status`
@@ -579,7 +593,7 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables
