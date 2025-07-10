@@ -76,20 +76,72 @@
     <div class="container">
         <img src="/logo.png" alt="GachaGoods Logo" class="logo" style="height:80px;width:auto;">
         <h1>Login</h1>
-        <form>
+        <form id="login-form">
             <label for="username">Username</label><br>
             <input type="text" id="username" name="username" required autocomplete="username"><br>
             <label for="password">Password</label><br>
             <input type="password" id="password" name="password" required autocomplete="current-password"><br>
             <button type="submit">Login</button>
         </form>
+        <div id="login-message" style="margin-top:12px;color:#e11d48;"></div>
         <a href="/register" class="register-link">Don't have an account? Register</a>
     </div>
     <div id="footer-placeholder"></div>
     <script>
+        function updateHeaderLinks() {
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            const isAdmin = user && user.role_id == 1;
+            // Hide login/register if logged in
+            document.querySelectorAll('#nav-login, #nav-register').forEach(a => {
+                if (user) a.style.display = 'none';
+                else a.style.display = '';
+            });
+            // Hide total sales if not admin
+            document.querySelectorAll('#nav-totalsales').forEach(a => {
+                if (user && !isAdmin) a.style.display = 'none';
+                else a.style.display = '';
+            });
+            // Hide manage if not admin
+            document.querySelectorAll('#nav-manage').forEach(a => {
+                if (user && isAdmin) a.style.display = '';
+                else a.style.display = 'none';
+            });
+        }
+
         fetch('/header.html')
             .then(res => res.text())
-            .then(html => document.getElementById('header-placeholder').innerHTML = html);
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                updateHeaderLinks();
+            });
+
+        // Login AJAX
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('login-message');
+            messageDiv.textContent = '';
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (res.ok && data.token && data.user) {
+                    // Save token and user info to localStorage
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    updateHeaderLinks();
+                    window.location.href = '/';
+                } else {
+                    messageDiv.textContent = data.error || 'Login failed.';
+                }
+            } catch (err) {
+                messageDiv.textContent = 'Network error.';
+            }
+        });
     </script>
 </body>
 </html>

@@ -97,6 +97,21 @@
         if (!itemId) {
             document.getElementById('item-container').innerHTML = '<p>Invalid item.</p>';
         } else {
+            // Carousel logic for item images
+            function renderImageCarousel(images) {
+                if (!images || !images.length) {
+                    return `<img src="/default_product_image.jpg" alt="No Image" class="item-img">`;
+                }
+                let carousel = `
+                    <div style="position:relative;display:inline-block;">
+                        <button type="button" id="itemPrevImg" style="display:${images.length>1?'block':'none'};position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:2;">&#8592;</button>
+                        <img id="itemImagePreview" src="${images[0]}" alt="Product Image" class="item-img">
+                        <button type="button" id="itemNextImg" style="display:${images.length>1?'block':'none'};position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:2;">&#8594;</button>
+                    </div>
+                `;
+                return carousel;
+            }
+
             fetch(`/api/item/${itemId}`)
                 .then(res => res.json())
                 .then(item => {
@@ -104,10 +119,11 @@
                         document.getElementById('item-container').innerHTML = '<p>Item not found.</p>';
                         return;
                     }
+                    // Use item.images array for carousel
                     document.getElementById('item-container').innerHTML = `
                         <a href="/shop" class="back-link">&larr; Back to Shop</a>
-                        <div>
-                            <img src="${item.image || '/default_product_image.jpg'}" alt="${item.name}" class="item-img">
+                        <div id="itemImageCarousel">
+                            ${renderImageCarousel(item.images)}
                         </div>
                         <div class="item-title">${item.name}</div>
                         <div class="item-price">₱${item.price}</div>
@@ -121,6 +137,17 @@
                         </div>
                         <button class="shop-item-btn">Add to Cart</button>
                     `;
+                    // Carousel navigation
+                    let images = item.images && item.images.length ? item.images : ['/default_product_image.jpg'];
+                    let idx = 0;
+                    document.getElementById('itemPrevImg')?.addEventListener('click', function() {
+                        idx = (idx - 1 + images.length) % images.length;
+                        document.getElementById('itemImagePreview').src = images[idx];
+                    });
+                    document.getElementById('itemNextImg')?.addEventListener('click', function() {
+                        idx = (idx + 1) % images.length;
+                        document.getElementById('itemImagePreview').src = images[idx];
+                    });
                 })
                 .catch(() => {
                     document.getElementById('item-container').innerHTML = '<p>Failed to load item details.</p>';

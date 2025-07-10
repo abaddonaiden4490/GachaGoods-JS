@@ -4,13 +4,55 @@
             <img src="/logo.png" alt="GachaGoods Logo" style="height:48px;width:auto;">
         </a>
         <nav class="nav" style="display:flex;gap:28px;padding:18px 0;font-size:1.08em;">
-            <a href="/" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Home</a>
-            <a href="/shop" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Shop</a>
-            <a href="/total-sales" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Total Sales</a>
-            <a href="/about" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">About</a>
-            <a href="/contact" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Contact</a>
-            <a href="/login" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Login</a>
-            <a href="/register" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Register</a>
+            <a href="/" id="nav-home" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Home</a>
+            <a href="/shop" id="nav-shop" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Shop</a>
+            <a href="/total-sales" id="nav-totalsales" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Total Sales</a>
+            <a href="/about" id="nav-about" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">About</a>
+            <a href="/contact" id="nav-contact" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Contact</a>
+            <a href="/login" id="nav-login" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Login</a>
+            <a href="/register" id="nav-register" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Register</a>
+            <a href="/manage/products" id="nav-manage" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;display:none;">Manage</a>
         </nav>
+        <div id="header-userbox" style="display:none;align-items:center;gap:14px;">
+            <span id="header-welcome" style="color:#7c3aed;font-weight:bold;"></span>
+            <button id="header-logout" style="background:#e11d48;color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:1em;cursor:pointer;">Logout</button>
+        </div>
     </div>
 </header>
+<script>
+(function() {
+    function updateHeaderLinks() {
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        const isAdmin = user && user.role_id == 1;
+        // Hide login/register if logged in
+        document.getElementById('nav-login').style.display = user ? 'none' : '';
+        document.getElementById('nav-register').style.display = user ? 'none' : '';
+        // Hide total sales if not admin
+        document.getElementById('nav-totalsales').style.display = (user && !isAdmin) ? 'none' : '';
+        // Show manage only for admin
+        document.getElementById('nav-manage').style.display = isAdmin ? '' : 'none';
+        // Show welcome and logout if logged in
+        const userBox = document.getElementById('header-userbox');
+        const welcome = document.getElementById('header-welcome');
+        if (user) {
+            userBox.style.display = 'flex';
+            welcome.textContent = `Welcome, ${user.name || user.username || 'User'}!!!`;
+        } else {
+            userBox.style.display = 'none';
+            welcome.textContent = '';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', updateHeaderLinks);
+    setTimeout(updateHeaderLinks, 100);
+
+    // Logout button logic
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'header-logout') {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+            // Optionally, reload page or redirect to home
+            window.location.href = '/';
+        }
+    });
+})();
+</script>

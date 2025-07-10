@@ -58,7 +58,7 @@
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
             <h2 id="modalTitle">Add Product</h2>
-            <form id="productForm">
+            <form id="productForm" enctype="multipart/form-data">
     <input type="hidden" id="productId" name="productId">
     
     <label>Name
@@ -81,6 +81,15 @@
         <select id="productType" name="productType" required></select>
     </label>
 
+    <label>Image
+        <input type="file" id="productImage" name="productImage" accept="image/*" multiple>
+        <div id="imagePreviewCarousel" style="display:none;max-width:100%;margin-top:8px;border-radius:6px;position:relative;">
+            <button type="button" id="prevImg" style="display:none;position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:2;">&#8592;</button>
+            <img id="imagePreview" src="" alt="Image Preview" style="max-width:100%;border-radius:6px;">
+            <button type="button" id="nextImg" style="display:none;position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:2;">&#8594;</button>
+        </div>
+    </label>
+
     <button type="submit" id="saveProductBtn">Save</button>
 </form>
         </div>
@@ -95,7 +104,15 @@
         // Dynamically load header and footer
         fetch('/header.html')
             .then(res => res.text())
-            .then(html => document.getElementById('header-placeholder').innerHTML = html);
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                // Hide manage button if not admin
+                const user = JSON.parse(localStorage.getItem('user') || 'null');
+                if (!user || user.role_id != 1) {
+                    // Hide manage nav if present
+                    document.getElementById('nav-manage') && (document.getElementById('nav-manage').style.display = 'none');
+                }
+            });
 
         let categories = [];
         let types = [];
@@ -148,6 +165,9 @@
                     $('#modalTitle').text('Add Product');
                     $('#productForm')[0].reset();
                     $('#productId').val('');
+                    previewImages = [];
+                    previewIndex = 0;
+                    $('#imagePreviewCarousel').hide();
                     fillSelectOptions();
                     $('#productModal').show();
                 });
@@ -163,6 +183,17 @@
                         $('#productPrice').val(item.price);
                         $('#productCategory').val(item.category_id);
                         $('#productType').val(item.type_id);
+                        // Load images as carousel
+                        if (item.images && item.images.length) {
+                            previewImages = item.images;
+                            previewIndex = 0;
+                            showPreviewImage(0);
+                        } else {
+                            previewImages = [];
+                            previewIndex = 0;
+                            $('#imagePreviewCarousel').hide();
+                        }
+                        $('#productImage').val('');
                         $('#productModal').show();
                     });
                 });
@@ -256,52 +287,94 @@
                     }
                 });
 
+                // Carousel preview logic
+                let previewImages = [];
+                let previewIndex = 0;
+                function showPreviewImage(idx) {
+                    if (previewImages.length === 0) {
+                        $('#imagePreviewCarousel').hide();
+                        return;
+                    }
+                    $('#imagePreview').attr('src', previewImages[idx]).show();
+                    $('#imagePreviewCarousel').show();
+                    $('#prevImg').toggle(previewImages.length > 1);
+                    $('#nextImg').toggle(previewImages.length > 1);
+                }
+                $('#prevImg').on('click', function() {
+                    if (previewImages.length > 1) {
+                        previewIndex = (previewIndex - 1 + previewImages.length) % previewImages.length;
+                        showPreviewImage(previewIndex);
+                    }
+                });
+                $('#nextImg').on('click', function() {
+                    if (previewImages.length > 1) {
+                        previewIndex = (previewIndex + 1) % previewImages.length;
+                        showPreviewImage(previewIndex);
+                    }
+                });
+
+                $('#productImage').on('change', function() {
+                    const files = this.files;
+                    previewImages = [];
+                    previewIndex = 0;
+                    if (files && files.length) {
+                        Array.from(files).forEach(file => {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                previewImages.push(e.target.result);
+                                if (previewImages.length === 1) {
+                                    showPreviewImage(0);
+                                }
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                        setTimeout(() => showPreviewImage(0), 100); // fallback in case async
+                    } else {
+                        $('#imagePreviewCarousel').hide();
+                    }
+                });
+
                 // Save Product (Add/Edit)
                 $('#productForm').on('submit', function(e) {
                     e.preventDefault();
-                    // Only allow save if name, description, and price are valid
                     if (!$('#productForm').valid()) {
                         return;
                     }
                     const id = $('#productId').val();
-                    const data = {
-                        name: $('#productName').val(),
-                        description: $('#productDesc').val(),
-                        price: $('#productPrice').val(),
-                        category_id: $('#productCategory').val(),
-                        type_id: $('#productType').val()
-                    };
-                    if (id) {
-                        // Edit
-                        $.ajax({
-                            url: `/api/items/${id}`,
-                            type: 'PUT',
-                            contentType: 'application/json',
-                            data: JSON.stringify(data),
-                            success: function() {
-                                $('#productModal').hide();
-                                table.ajax.reload();
-                            },
-                            error: function() {
-                                alert('Failed to update.');
-                            }
-                        });
-                    } else {
-                        // Add
-                        $.ajax({
-                            url: '/api/items',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify(data),
-                            success: function() {
-                                $('#productModal').hide();
-                                table.ajax.reload();
-                            },
-                            error: function() {
-                                alert('Failed to add.');
-                            }
-                        });
+                    const formData = new FormData();
+                    formData.append('name', $('#productName').val());
+                    formData.append('description', $('#productDesc').val());
+                    formData.append('price', $('#productPrice').val());
+                    formData.append('category_id', $('#productCategory').val());
+                    formData.append('type_id', $('#productType').val());
+                    const imageFiles = $('#productImage')[0].files;
+                    if (imageFiles && imageFiles.length) {
+                        for (let i = 0; i < imageFiles.length; i++) {
+                            formData.append('images', imageFiles[i]);
+                        }
                     }
+
+                    let ajaxOptions = {
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function() {
+                            $('#productModal').hide();
+                            table.ajax.reload();
+                        },
+                        error: function() {
+                            alert('Failed to ' + (id ? 'update' : 'add') + '.');
+                        }
+                    };
+
+                    if (id) {
+                        ajaxOptions.url = `/api/items/${id}`;
+                        ajaxOptions.type = 'PUT';
+                    } else {
+                        ajaxOptions.url = '/api/items';
+                        ajaxOptions.type = 'POST';
+                    }
+                    $.ajax(ajaxOptions);
                 });
             });
         });

@@ -3,7 +3,29 @@ const cors = require('cors');
 const mysql = require('mysql2');
 require('dotenv').config();
 const db = require('./db');
-const path = require('path'); // <-- Add this line
+const path = require('path');
+const multer = require('multer'); // <-- Add multer for file uploads
+const fs = require('fs'); // <-- For folder check
+const bcrypt = require('bcrypt'); // <-- Add bcrypt for password hashing
+
+// Ensure upload directory exists
+const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Multer setup
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    // Use Date.now for uniqueness
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext);
+  }
+});
+const upload = multer({ storage: storage });
 
 const app = express();
 app.use(cors());
@@ -38,10 +60,20 @@ app.get('/total-sales', (req, res) => {
 
 // API endpoint to get items from the database
 app.get('/api/items', (req, res) => {
-  db.query('SELECT * FROM items', (err, results) => {
+  const sql = `
+    SELECT i.*, GROUP_CONCAT(img.image_path) AS images
+    FROM items i
+    LEFT JOIN item_images img ON img.item_id = i.id
+    GROUP BY i.id
+  `;
+  db.query(sql, (err, results) => {
     if (err) {
       res.status(500).json({ error: 'Database error' });
     } else {
+      // Convert images from CSV to array
+      results.forEach(item => {
+        item.images = item.images ? item.images.split(',') : [];
+      });
       res.json(results);
     }
   });
@@ -68,7 +100,16 @@ app.get('/api/item/:id', (req, res) => {
     } else if (!results.length) {
       res.status(404).json({ error: 'Item not found' });
     } else {
-      res.json(results[0]);
+      const item = results[0];
+      // Get all images for this item
+      db.query('SELECT image_path FROM item_images WHERE item_id = ?', [item.id], (imgErr, imgRows) => {
+        if (imgErr) {
+          item.images = [];
+        } else {
+          item.images = imgRows.map(row => row.image_path);
+        }
+        res.json(item);
+      });
     }
   });
 });
@@ -114,8 +155,8 @@ app.get('/api/types', (req, res) => {
   });
 });
 
-// Add Product
-app.post('/api/items', (req, res) => {
+// Add Product (multiple images)
+app.post('/api/items', upload.array('images'), (req, res) => {
   const { name, description, price, category_id, type_id } = req.body;
   db.query(
     'INSERT INTO items (name, description, price, category_id, type_id) VALUES (?, ?, ?, ?, ?)',
@@ -124,14 +165,30 @@ app.post('/api/items', (req, res) => {
       if (err) {
         res.status(500).json({ error: 'Database error' });
       } else {
-        res.status(201).json({ id: result.insertId });
+        const itemId = result.insertId;
+        if (req.files && req.files.length) {
+          const values = req.files.map(f => [itemId, '/uploads/' + f.filename]);
+          db.query(
+            'INSERT INTO item_images (item_id, image_path) VALUES ?',
+            [values],
+            (imgErr) => {
+              if (imgErr) {
+                res.status(500).json({ error: 'Image DB error' });
+              } else {
+                res.status(201).json({ id: itemId });
+              }
+            }
+          );
+        } else {
+          res.status(201).json({ id: itemId });
+        }
       }
     }
   );
 });
 
-// Edit Product
-app.put('/api/items/:id', (req, res) => {
+// Edit Product (multiple images, replace all images if new ones uploaded)
+app.put('/api/items/:id', upload.array('images'), (req, res) => {
   const { name, description, price, category_id, type_id } = req.body;
   db.query(
     'UPDATE items SET name=?, description=?, price=?, category_id=?, type_id=? WHERE id=?',
@@ -140,7 +197,29 @@ app.put('/api/items/:id', (req, res) => {
       if (err) {
         res.status(500).json({ error: 'Database error' });
       } else {
-        res.json({ success: true });
+        // If new images uploaded, replace all old images
+        if (req.files && req.files.length) {
+          db.query('DELETE FROM item_images WHERE item_id=?', [req.params.id], (delErr) => {
+            if (delErr) {
+              res.status(500).json({ error: 'Image DB error' });
+            } else {
+              const values = req.files.map(f => [req.params.id, '/uploads/' + f.filename]);
+              db.query(
+                'INSERT INTO item_images (item_id, image_path) VALUES ?',
+                [values],
+                (imgErr) => {
+                  if (imgErr) {
+                    res.status(500).json({ error: 'Image DB error' });
+                  } else {
+                    res.json({ success: true });
+                  }
+                }
+              );
+            }
+          });
+        } else {
+          res.json({ success: true });
+        }
       }
     }
   );
@@ -221,6 +300,79 @@ app.get('/manage/types', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'types.html'));
 });
 
+// Register endpoint
+app.post('/api/register', async (req, res) => {
+  const { username, email, password } = req.body;
+  const role_id = 2;
+  const status_id = 1;
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: 'Missing required fields.' });
+  }
+  try {
+    // Check if name or email already exists
+    db.query(
+      'SELECT id FROM users WHERE name = ? OR email = ? LIMIT 1',
+      [username, email],
+      async (err, rows) => {
+        if (err) return res.status(500).json({ error: 'Database error.' });
+        if (rows.length) {
+          return res.status(409).json({ error: 'Username or email already exists.' });
+        }
+        // Hash password
+        const hash = await bcrypt.hash(password, 10);
+        db.query(
+          `INSERT INTO users 
+            (name, email, email_verified_at, password, status_id, role_id, auth_token) 
+           VALUES (?, ?, NULL, ?, ?, ?, NULL)`,
+          [username, email, hash, status_id, role_id],
+          (err2, result) => {
+            if (err2) return res.status(500).json({ error: 'Database error.' });
+            res.status(201).json({ success: true });
+          }
+        );
+      }
+    );
+  } catch (e) {
+    res.status(500).json({ error: 'Server error.' });
+  }
+});
+
+// Login endpoint
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password)
+    return res.status(400).json({ error: 'Missing credentials.' });
+  db.query(
+    'SELECT * FROM users WHERE name = ? LIMIT 1',
+    [username],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: 'Database error.' });
+      if (!rows.length) return res.status(401).json({ error: 'Invalid credentials.' });
+      const user = rows[0];
+      // Debug log
+      // console.log('DB password:', user.password, 'Input password:', password);
+      if (user.password && user.password.startsWith('$2b$')) {
+        // bcrypt hash
+        bcrypt.compare(password, user.password, (err2, match) => {
+          if (err2) return res.status(500).json({ error: 'Server error.' });
+          if (!match) return res.status(401).json({ error: 'Invalid credentials.' });
+          const token = require('crypto').randomBytes(32).toString('hex');
+          const { password: _, ...userInfo } = user;
+          res.json({ token, user: userInfo });
+        });
+      } else {
+        // Plain text fallback (for legacy users, not secure)
+        if (user.password === password) {
+          const token = require('crypto').randomBytes(32).toString('hex');
+          const { password: _, ...userInfo } = user;
+          res.json({ token, user: userInfo });
+        } else {
+          return res.status(401).json({ error: 'Invalid credentials.' });
+        }
+      }
+    }
+  );
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

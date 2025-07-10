@@ -175,9 +175,16 @@
 
         function renderItems(items) {
             if (!items.length) return;
-            const html = items.map(item => `
+            const html = items.map((item, idx) => {
+                const images = (item.images && item.images.length) ? item.images : ['/default_product_image.jpg'];
+                const carouselId = `shopCarousel${item.id}_${idx}`;
+                return `
                 <div class="shop-item">
-                    <img src="${item.image || '/default_product_image.jpg'}" alt="${item.name}">
+                    <div class="shop-item-carousel" id="${carouselId}" style="position:relative;">
+                        <button type="button" class="shop-prev-btn" style="display:${images.length>1?'block':'none'};position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:2;">&#8592;</button>
+                        <img src="${images[0]}" alt="${item.name}" style="width:240px;height:240px;object-fit:contain;border-radius:10px;">
+                        <button type="button" class="shop-next-btn" style="display:${images.length>1?'block':'none'};position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:2;">&#8594;</button>
+                    </div>
                     <div class="shop-item-title">${item.name}</div>
                     <div class="shop-item-price">₱${item.price}</div>
                     <div class="shop-item-actions">
@@ -185,8 +192,30 @@
                         <button class="shop-item-btn">Add to Cart</button>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
             $('#shop-grid').append(html);
+
+            // Attach carousel logic for each item
+            items.forEach((item, idx) => {
+                const images = (item.images && item.images.length) ? item.images : ['/default_product_image.jpg'];
+                const carouselId = `shopCarousel${item.id}_${idx}`;
+                let imgIdx = 0;
+                const $carousel = $('#' + carouselId);
+                $carousel.data('imgIdx', 0);
+                $carousel.data('images', images);
+
+                $carousel.find('.shop-prev-btn').on('click', function() {
+                    imgIdx = ($carousel.data('imgIdx') - 1 + images.length) % images.length;
+                    $carousel.find('img').attr('src', images[imgIdx]);
+                    $carousel.data('imgIdx', imgIdx);
+                });
+                $carousel.find('.shop-next-btn').on('click', function() {
+                    imgIdx = ($carousel.data('imgIdx') + 1) % images.length;
+                    $carousel.find('img').attr('src', images[imgIdx]);
+                    $carousel.data('imgIdx', imgIdx);
+                });
+            });
         }
 
         function loadItems() {
