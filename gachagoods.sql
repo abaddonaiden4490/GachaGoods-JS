@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 10, 2025 at 02:35 PM
+-- Generation Time: Jul 10, 2025 at 03:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -145,7 +145,8 @@ INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_
 (39, 'EMU OTORi PLUSH DOLL', 'Wonderhoyism', 99.99, 11, 3, NULL, NULL),
 (40, 'Cart Titan Cosplay Costume', 'ZAZAGEYOHHH!!!!!! AAAAHHHHHH!!!!', 69.69, 16, 18, NULL, NULL),
 (41, 'Emu Otori Jacket w/ Hoodie', 'Feat. Ichika Hoshino. Wonderhoy!!!!', 99.99, 11, 7, NULL, NULL),
-(42, 'Gerald', 'mabaho', 69.99, 16, 30, NULL, NULL);
+(42, 'Gerald', 'mabaho', 69.99, 16, 30, NULL, NULL),
+(43, 'Sakura Miko 400x400 mousepad', 'For TenZ the aimgod', 99.99, 1, 14, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -167,7 +168,14 @@ INSERT INTO `item_images` (`id`, `item_id`, `image_path`) VALUES
 (1, 41, '/uploads/1752141279900.jpg'),
 (2, 42, '/uploads/1752142776990.jpg'),
 (3, 42, '/uploads/1752142777003.jpg'),
-(4, 42, '/uploads/1752142777013.jpg');
+(4, 42, '/uploads/1752142777013.jpg'),
+(5, 43, '/uploads/1752152711680.jpg'),
+(6, 43, '/uploads/1752152711682.png'),
+(7, 43, '/uploads/1752152711685.png'),
+(8, 43, '/uploads/1752152711686.jpg'),
+(9, 43, '/uploads/1752152711688.png'),
+(10, 43, '/uploads/1752152711688.jpg'),
+(11, 43, '/uploads/1752152711688.jpg');
 
 -- --------------------------------------------------------
 
@@ -405,7 +413,11 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (13, 'Sakura', 'sakura@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL),
-(16, 'Piad', 'evanpiad05@gmail.com', NULL, '$2b$10$gbcca1Ae0TcJtJIQmmXGBejJBah9rX73UdE7iNeP01fm1pXStVlDS', 1, 2, NULL);
+(16, 'Piad', 'evanpiad05@gmail.com', NULL, '$2b$10$gbcca1Ae0TcJtJIQmmXGBejJBah9rX73UdE7iNeP01fm1pXStVlDS', 1, 2, NULL),
+(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, '6dff87bb75ab9a9b939643d197c0cab3e6d0aed6c59c59d775bdf2fc41c1b680'),
+(18, 'Alvin Yago Comp Org', 'loisegarcia07@gmail.com', NULL, '$2b$10$4vYEJ5Oy3cU1t6SDNGkfx.ZsaBfoMDvY9IQBJq9sbFpe1p9ziEsYi', 1, 2, 'ecc1dd04c556d26ded018791af3470cf0022b9a8ac148347b6b9564f3e281362'),
+(19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 2, '4464f558bdfc32b55705b0e0c3c929ddf12da92d3d64445a35af43dab923c89a'),
+(20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 1, 2, 'd938d99894e739cd455552785a61323d50a9a481c8d7b37e84f190d4d9d6abec');
 
 --
 -- Indexes for dumped tables
@@ -533,13 +545,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `item_images`
 --
 ALTER TABLE `item_images`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `item_status`
@@ -593,7 +605,7 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables
