@@ -69,6 +69,18 @@
             text-decoration: underline;
             font-size: 0.98em;
         }
+        .is-invalid {
+            border-color: #e11d48;
+        }
+        .invalid-feedback {
+            color: #e11d48;
+            font-size: 0.9em;
+            margin-top: -12px;
+            margin-bottom: 12px;
+        }
+        .is-valid {
+            border-color: #059669;
+        }
     </style>
 </head>
 <body>
@@ -89,14 +101,66 @@
         <a href="/login" class="login-link">Already have an account? Login</a>
     </div>
     <div id="footer-placeholder"></div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script>
         fetch('/header.html')
             .then(res => res.text())
             .then(html => document.getElementById('header-placeholder').innerHTML = html);
 
+        // jQuery Validation setup for register form
+        $(function() {
+            $('#register-form').validate({
+                rules: {
+                    username: {
+                        required: true,
+                        minlength: 3,
+                        maxlength: 32
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    password: {
+                        required: true,
+                        maxlength: 64
+                    }
+                },
+                messages: {
+                    username: {
+                        required: "Username is required",
+                        minlength: "Username must be at least 3 characters",
+                        maxlength: "Username must be less than 32 characters"
+                    },
+                    email: {
+                        required: "Email is required",
+                        email: "Please enter a valid email address"
+                    },
+                    password: {
+                        required: "Password is required",
+                        maxlength: "Password must be less than 64 characters"
+                    }
+                },
+                errorClass: "is-invalid",
+                validClass: "is-valid",
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    error.insertAfter(element);
+                },
+                highlight: function(element) {
+                    $(element).addClass('is-invalid').removeClass('is-valid');
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass('is-invalid').addClass('is-valid');
+                }
+            });
+        });
+
         // Register form AJAX
         document.getElementById('register-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            // Only submit if valid
+            if (!$('#register-form').valid()) return;
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
@@ -127,5 +191,7 @@
             }
         });
     </script>
+</body>
+</html>
 </body>
 </html>

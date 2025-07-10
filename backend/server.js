@@ -338,43 +338,12 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// Login endpoint
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password)
-    return res.status(400).json({ error: 'Missing credentials.' });
-  db.query(
-    'SELECT * FROM users WHERE name = ? LIMIT 1',
-    [username],
-    (err, rows) => {
-      if (err) return res.status(500).json({ error: 'Database error.' });
-      if (!rows.length) return res.status(401).json({ error: 'Invalid credentials.' });
-      const user = rows[0];
-      // Debug log
-      // console.log('DB password:', user.password, 'Input password:', password);
-      if (user.password && user.password.startsWith('$2b$')) {
-        // bcrypt hash
-        bcrypt.compare(password, user.password, (err2, match) => {
-          if (err2) return res.status(500).json({ error: 'Server error.' });
-          if (!match) return res.status(401).json({ error: 'Invalid credentials.' });
-          const token = require('crypto').randomBytes(32).toString('hex');
-          const { password: _, ...userInfo } = user;
-          res.json({ token, user: userInfo });
-        });
-      } else {
-        // Plain text fallback (for legacy users, not secure)
-        if (user.password === password) {
-          const token = require('crypto').randomBytes(32).toString('hex');
-          const { password: _, ...userInfo } = user;
-          res.json({ token, user: userInfo });
-        } else {
-          return res.status(401).json({ error: 'Invalid credentials.' });
-        }
-      }
-    }
-  );
-});
+// Remove this block:
+// app.post('/api/login', (req, res) => {
+//   ...existing code...
+// });
 
+// Use auth routes for /api (this will handle /api/login)
 app.use('/api', authRoutes);
 
 const PORT = process.env.PORT || 3000;

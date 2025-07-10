@@ -91,21 +91,19 @@
         function updateHeaderLinks() {
             const user = JSON.parse(localStorage.getItem('user') || 'null');
             const isAdmin = user && user.role_id == 1;
-            // Hide login/register if logged in
             document.querySelectorAll('#nav-login, #nav-register').forEach(a => {
                 if (user) a.style.display = 'none';
                 else a.style.display = '';
             });
-            // Hide total sales if not admin
             document.querySelectorAll('#nav-totalsales').forEach(a => {
                 if (user && !isAdmin) a.style.display = 'none';
                 else a.style.display = '';
             });
-            // Hide manage if not admin
             document.querySelectorAll('#nav-manage').forEach(a => {
                 if (user && isAdmin) a.style.display = '';
                 else a.style.display = 'none';
             });
+            // User dropdown handled by header.html script
         }
 
         fetch('/header.html')
@@ -130,7 +128,6 @@
                 });
                 const data = await res.json();
                 if (res.ok && data.token && data.user) {
-                    // Save token and user info to localStorage
                     localStorage.setItem('auth_token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
                     updateHeaderLinks();
