@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 10, 2025 at 07:31 AM
+-- Generation Time: Jul 10, 2025 at 07:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -139,7 +139,10 @@ INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_
 (28, 'Toto Natividad', 'director ng mga movie ni cesar montano. eyyyy', 69.69, 17, 1, NULL, NULL),
 (29, 'NERO KEYCHAIN', 'HASHIRE SORI YO', 66.99, 6, 2, NULL, NULL),
 (32, 'Nico Yazawa Plush.', 'nico nico niii', 99.99, 9, 3, NULL, NULL),
-(33, 'Rinku Aimoto Plush', 'fumo plushie cute', 99.99, 8, 3, NULL, NULL);
+(33, 'Rinku Aimoto Plush', 'fumo plushie cute', 99.99, 8, 3, NULL, NULL),
+(38, 'efef', 'glafenine', 99.99, 16, 1, NULL, NULL),
+(39, 'EMU OTORi PLUSH DOLL', 'Wonderhoyism', 99.99, 11, 3, NULL, NULL),
+(40, 'titan cart', 'ello', 88.88, 16, 18, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -516,7 +519,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `item_images`
