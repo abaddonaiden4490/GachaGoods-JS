@@ -7,6 +7,7 @@ const path = require('path');
 const multer = require('multer'); // <-- Add multer for file uploads
 const fs = require('fs'); // <-- For folder check
 const bcrypt = require('bcrypt'); // <-- Add bcrypt for password hashing
+const authRoutes = require('./auth'); // <-- Import auth routes
 
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
@@ -373,6 +374,8 @@ app.post('/api/login', (req, res) => {
     }
   );
 });
+
+app.use('/api', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
