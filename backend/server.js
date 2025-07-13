@@ -301,6 +301,8 @@ app.get('/manage/types', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'types.html'));
 });
 
+app.use('/api', authRoutes);
+
 // Register endpoint
 app.post('/api/register', async (req, res) => {
   const { username, email, password } = req.body;
@@ -338,13 +340,45 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// Remove this block:
-// app.post('/api/login', (req, res) => {
-//   ...existing code...
-// });
-
-// Use auth routes for /api (this will handle /api/login)
-app.use('/api', authRoutes);
+// Login endpoint
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Missing email or password.' });
+  }
+  db.query(
+    'SELECT * FROM users WHERE email = ? LIMIT 1',
+    [email],
+    async (err, rows) => {
+      if (err) return res.status(500).json({ error: 'Database error.' });
+      if (!rows.length) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
+      const user = rows[0];
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
+      // Generate a simple random token
+      const token = require('crypto').randomBytes(32).toString('hex');
+      db.query(
+        'UPDATE users SET auth_token = ? WHERE id = ?',
+        [token, user.id],
+        (err2) => {
+          if (err2) return res.status(500).json({ error: 'Database error.' });
+          res.json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role_id: user.role_id,
+            status_id: user.status_id,
+            token
+          });
+        }
+      );
+    }
+  );
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

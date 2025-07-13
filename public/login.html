@@ -77,8 +77,8 @@
         <img src="/logo.png" alt="GachaGoods Logo" class="logo" style="height:80px;width:auto;">
         <h1>Login</h1>
         <form id="login-form">
-            <label for="username">Username</label><br>
-            <input type="text" id="username" name="username" required autocomplete="username"><br>
+            <label for="email">Email</label><br>
+            <input type="text" id="email" name="email" required autocomplete="email"><br>
             <label for="password">Password</label><br>
             <input type="password" id="password" name="password" required autocomplete="current-password"><br>
             <button type="submit">Login</button>
@@ -88,35 +88,17 @@
     </div>
     <div id="footer-placeholder"></div>
     <script>
-        function updateHeaderLinks() {
-            const user = JSON.parse(localStorage.getItem('user') || 'null');
-            const isAdmin = user && user.role_id == 1;
-            document.querySelectorAll('#nav-login, #nav-register').forEach(a => {
-                if (user) a.style.display = 'none';
-                else a.style.display = '';
-            });
-            document.querySelectorAll('#nav-totalsales').forEach(a => {
-                if (user && !isAdmin) a.style.display = 'none';
-                else a.style.display = '';
-            });
-            document.querySelectorAll('#nav-manage').forEach(a => {
-                if (user && isAdmin) a.style.display = '';
-                else a.style.display = 'none';
-            });
-            // User dropdown handled by header.html script
-        }
 
         fetch('/header.html')
             .then(res => res.text())
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;
-                updateHeaderLinks();
             });
 
         // Login AJAX
         document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('login-message');
             messageDiv.textContent = '';
@@ -124,13 +106,18 @@
                 const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ email, password })
                 });
                 const data = await res.json();
-                if (res.ok && data.token && data.user) {
+                if (res.ok && data.token) {
                     localStorage.setItem('auth_token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    updateHeaderLinks();
+                    localStorage.setItem('user', JSON.stringify({
+                        id: data.id,
+                        name: data.name,
+                        email: data.email,
+                        role_id: data.role_id,
+                        status_id: data.status_id
+                    }));
                     window.location.href = '/';
                 } else {
                     messageDiv.textContent = data.error || 'Login failed.';

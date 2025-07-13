@@ -1,0 +1,51 @@
+<header class="header" style="background:#fff; color:#00ffff; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+    <div style="display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 32px;">
+        <a href="/" style="display:flex;align-items:center;">
+            <img src="/logo.png" alt="GachaGoods Logo" style="height:48px;width:auto;">
+        </a>
+        <div style="display:flex;align-items:center;gap:24px;">
+            <nav class="nav" style="display:flex;gap:28px;padding:18px 0;font-size:1.08em;">
+                <a href="/" id="nav-home" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Home</a>
+                <a href="/total-sales" id="nav-totalsales" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Total Sales</a>
+                <!-- Manage dropdown start -->
+                <div style="position:relative;">
+                    <button id="nav-manage-btn" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;background:none;border:none;cursor:pointer;">
+                        Manage ▼
+                    </button>
+                    <div id="nav-manage-dropdown" style="display:none;position:absolute;top:110%;left:0;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-width:180px;z-index:100;">
+                        <a href="/manage/products" style="display:block;padding:10px 18px;color:#7c3aed;text-decoration:none;border-bottom:1px solid #eee;">Manage Products</a>
+                        <a href="/manage/categories" style="display:block;padding:10px 18px;color:#7c3aed;text-decoration:none;border-bottom:1px solid #eee;">Manage Categories</a>
+                        <a href="/manage/types" style="display:block;padding:10px 18px;color:#7c3aed;text-decoration:none;">Manage Types</a>
+                    </div>
+                </div>
+                <!-- Manage dropdown end -->
+            </nav>
+            <div id="header-userbox" style="display:none;align-items:center;gap:10px;">
+                <span id="header-welcome" style="color:#7c3aed;font-weight:bold;"></span>
+                <div id="header-userdropdown" style="position:relative;">
+                    <button id="header-userbtn" style="background:#7c3aed;color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:1em;cursor:pointer;">
+                        Hello, <span id="header-username"></span>!
+                    </button>
+                    <div id="header-dropdownmenu" style="display:none;position:absolute;right:0;top:110%;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-width:160px;z-index:100;">
+                        <a href="/profile" style="display:block;padding:10px 18px;color:#7c3aed;text-decoration:none;border-bottom:1px solid #eee;">Edit Profile</a>
+                        <button id="header-logout" style="width:100%;background:none;color:#e11d48;border:none;padding:10px 18px;text-align:left;cursor:pointer;">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<script>
+    // Minimal dropdown toggle logic
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('nav-manage-btn');
+        var dropdown = document.getElementById('nav-manage-dropdown');
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        document.addEventListener('click', function() {
+            dropdown.style.display = 'none';
+        });
+    });
+</script>
