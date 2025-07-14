@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 const db = require('./db');
 const path = require('path');
@@ -300,8 +300,35 @@ app.get('/manage/categories', (req, res) => {
 app.get('/manage/types', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'types.html'));
 });
+app.get('/manage/users', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'users.html'));
+});
 
 app.use('/api', authRoutes);
+
+app.get('/api/users', (req, res) => {
+    db.query(`
+        SELECT 
+            users.id AS user_id,
+            users.name AS username,
+            users.email,
+            users.role_id,
+            users.status_id,
+            roles.name AS role_name,
+            statuses.name AS status_name
+        FROM users
+        LEFT JOIN roles ON users.role_id = roles.id
+        LEFT JOIN statuses ON users.status_id = statuses.id
+    `, (err, results) => {
+        if (err) {
+            console.error('🔥 [ERROR in GET /api/users]:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        res.json(results);
+    });
+});
+
+
 
 // Register endpoint
 app.post('/api/register', async (req, res) => {
@@ -379,6 +406,63 @@ app.post('/api/login', async (req, res) => {
     }
   );
 });
+
+app.get('/api/users', async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT 
+        u.id AS user_id,
+        u.name AS username,
+        u.email,
+        u.role_id,
+        r.name AS role_name,
+        u.status_id,
+        s.name AS status_name
+      FROM users u
+      LEFT JOIN roles r ON u.role_id = r.id
+      LEFT JOIN statuses s ON u.status_id = s.id
+    `);
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+app.put('/api/users/:id/role', async (req, res) => {
+  const userId = req.params.id;
+  const { role_id } = req.body;
+
+  if (![1, 2].includes(role_id)) {
+    return res.status(400).json({ error: 'Invalid role_id' });
+  }
+
+  try {
+    await db.query(`UPDATE users SET role_id = ? WHERE id = ?`, [role_id, userId]);
+    res.status(200).json({ message: 'Role updated' });
+  } catch (error) {
+    console.error('Error updating role:', error);
+    res.status(500).json({ error: 'Failed to update role' });
+  }
+});
+
+app.put('/api/users/:id/status', async (req, res) => {
+  const userId = req.params.id;
+  const { status_id } = req.body;
+
+  if (![1, 2].includes(status_id)) {
+    return res.status(400).json({ error: 'Invalid status_id' });
+  }
+
+  try {
+    await db.query(`UPDATE users SET status_id = ? WHERE id = ?`, [status_id, userId]);
+    res.status(200).json({ message: 'Status updated' });
+  } catch (error) {
+    console.error('Error updating status:', error);
+    res.status(500).json({ error: 'Failed to update status' });
+  }
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
