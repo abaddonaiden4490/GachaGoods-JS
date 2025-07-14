@@ -8,6 +8,7 @@ const multer = require('multer'); // <-- Add multer for file uploads
 const fs = require('fs'); // <-- For folder check
 const bcrypt = require('bcrypt'); // <-- Add bcrypt for password hashing
 const authRoutes = require('./auth'); // <-- Import auth routes
+const crypto = require('crypto');
 
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
@@ -367,32 +368,45 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// Login endpoint
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
+
   if (!email || !password) {
     return res.status(400).json({ error: 'Missing email or password.' });
   }
+
   db.query(
     'SELECT * FROM users WHERE email = ? LIMIT 1',
     [email],
     async (err, rows) => {
       if (err) return res.status(500).json({ error: 'Database error.' });
+
       if (!rows.length) {
         return res.status(401).json({ error: 'Invalid email or password.' });
       }
+
       const user = rows[0];
+
+      // ✅ BLOCK deactivated users BEFORE password or token logic
+      if (user.status_id === 2) {
+        return res.status(403).json({ error: 'Your account is deactivated. Please contact support.' });
+      }
+
+      // ✅ Password check
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
         return res.status(401).json({ error: 'Invalid email or password.' });
       }
-      // Generate a simple random token
-      const token = require('crypto').randomBytes(32).toString('hex');
+
+      // ✅ Only active users get a token
+      const token = crypto.randomBytes(32).toString('hex');
+
       db.query(
         'UPDATE users SET auth_token = ? WHERE id = ?',
         [token, user.id],
         (err2) => {
           if (err2) return res.status(500).json({ error: 'Database error.' });
+
           res.json({
             id: user.id,
             name: user.name,
@@ -406,6 +420,8 @@ app.post('/api/login', async (req, res) => {
     }
   );
 });
+
+
 
 app.get('/api/users', async (req, res) => {
   try {
@@ -462,6 +478,9 @@ app.put('/api/users/:id/status', async (req, res) => {
     res.status(500).json({ error: 'Failed to update status' });
   }
 });
+
+const userInfoRoute = require('./middleware/userInfo');
+app.use('/api', userInfoRoute);
 
 
 const PORT = process.env.PORT || 3000;

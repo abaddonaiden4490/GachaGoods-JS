@@ -12,6 +12,7 @@
             </nav>
             <div id="header-userbox" style="display:none;align-items:center;gap:10px;">
                 <span id="header-welcome" style="color:#7c3aed;font-weight:bold;"></span>
+                <span id="header-hello" style="color:#7c3aed;"></span>
                 <div id="header-userdropdown" style="position:relative;">
                     <button id="header-userbtn" style="background:#7c3aed;color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:1em;cursor:pointer;">
                         Hello, <span id="header-username"></span>!
@@ -40,14 +41,17 @@
         const userBox = document.getElementById('header-userbox');
         const usernameSpan = document.getElementById('header-username');
         const welcome = document.getElementById('header-welcome');
+        const hello = document.getElementById('header-hello');
         if (user) {
             userBox.style.display = 'flex';
             usernameSpan.textContent = user.name || user.username || 'User';
             welcome.textContent = `Welcome, ${user.name || user.username || 'User'}!!!`;
+            hello.textContent = `Hello, ${user.name || user.username || 'User'}!`;
         } else {
             userBox.style.display = 'none';
             usernameSpan.textContent = '';
             welcome.textContent = '';
+            hello.textContent = '';
         }
         document.getElementById('header-dropdownmenu').style.display = 'none';
     }

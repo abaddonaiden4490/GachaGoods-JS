@@ -88,44 +88,61 @@
     </div>
     <div id="footer-placeholder"></div>
     <script>
+    // Load header content
+    fetch('/header.html')
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('header-placeholder').innerHTML = html;
+        });
 
-        fetch('/header.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('header-placeholder').innerHTML = html;
+    // Login AJAX logic
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const messageDiv = document.getElementById('login-message');
+        messageDiv.textContent = '';
+
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
             });
 
-        // Login AJAX
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const messageDiv = document.getElementById('login-message');
-            messageDiv.textContent = '';
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                if (res.ok && data.token) {
-                    localStorage.setItem('auth_token', data.token);
-                    localStorage.setItem('user', JSON.stringify({
-                        id: data.id,
-                        name: data.name,
-                        email: data.email,
-                        role_id: data.role_id,
-                        status_id: data.status_id
-                    }));
-                    window.location.href = '/';
+            const data = await res.json();
+
+            if (!res.ok) {
+                // Handle various error responses
+                if (res.status === 403 && data.error) {
+                    messageDiv.textContent = data.error; // Account deactivated
+                } else if (res.status === 401 && data.error) {
+                    messageDiv.textContent = data.error; // Invalid credentials
                 } else {
                     messageDiv.textContent = data.error || 'Login failed.';
                 }
-            } catch (err) {
-                messageDiv.textContent = 'Network error.';
+                return;
             }
-        });
-    </script>
+
+            // Success: store token and user info
+            if (data.token) {
+                localStorage.setItem('auth_token', data.token);
+                localStorage.setItem('user', JSON.stringify({
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    role_id: data.role_id,
+                    status_id: data.status_id
+                }));
+                window.location.href = '/';
+            } else {
+                messageDiv.textContent = 'Unexpected response from server.';
+            }
+
+        } catch (err) {
+            messageDiv.textContent = 'Network error. Please try again.';
+        }
+    });
+</script>
 </body>
 </html>

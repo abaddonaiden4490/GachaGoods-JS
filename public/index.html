@@ -111,10 +111,25 @@
     </div>
     <div id="footer-placeholder"></div>
     <script>
-        // Dynamically load header and footer
-        fetch('/header.html')
-            .then(res => res.text())
-            .then(html => document.getElementById('header-placeholder').innerHTML = html);
+    fetch('/api/user-info')
+        .then(res => res.json())
+        .then(data => {
+            let headerFile = 'header.html'; // default
+
+            if (data.role_id === 1) {
+                headerFile = 'header-admin.html';
+            } else if (data.role_id === 2) {
+                headerFile = 'header-user.html';
+            }
+
+            return fetch(`/${headerFile}`);
+        })
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('header-placeholder').innerHTML = html;
+        })
+        .catch(err => console.error('Failed to load header:', err));
     </script>
+
 </body>
 </html>
