@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results | GachaGoods Otaku Merch Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/font.otf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
+            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 60px auto;
+            background: rgba(255,255,255,0.96);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 40px 36px;
+        }
+        h1 {
+            color: #7c3aed;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .shop-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+        }
+        .shop-item {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+            padding: 22px 18px 18px 18px;
+            width: 240px;
+            text-align: center;
+            transition: box-shadow 0.2s;
+        }
+        .shop-item:hover {
+            box-shadow: 0 4px 16px rgba(124,58,237,0.13);
+        }
+        .shop-item img {
+            width: 240px;
+            height: 240px;
+            object-fit: contain;
+            margin-bottom: 18px;
+        }
+        .shop-item-title {
+            font-size: 1.13em;
+            font-weight: bold;
+            color: #7c3aed;
+            margin-bottom: 8px;
+        }
+        .shop-item-price {
+            color: #1e40af;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 1.08em;
+        }
+        .shop-item-btn {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .shop-item-btn:hover {
+            background: #5b21b6;
+        }
+        .shop-item-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="container">
+        <h1 id="results-title">Search Results</h1>
+        <div id="shop-grid" class="shop-grid">
+            <!-- Results will be injected here -->
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // Header + Footer Load
+        fetch('/header.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('header-placeholder').innerHTML = html);
+
+        function renderItems(items) {
+            if (!items.length) {
+                $('#shop-grid').html('<p>No items found.</p>');
+                return;
+            }
+
+            const html = items.map((item, idx) => {
+                const images = (item.images && item.images.length) ? item.images : ['/default_product_image.jpg'];
+                const carouselId = `shopCarousel${item.id}_${idx}`;
+                return `
+                <div class="shop-item">
+                    <div class="shop-item-carousel" id="${carouselId}" style="position:relative;">
+                        <button type="button" class="shop-prev-btn" style="display:${images.length>1?'block':'none'};position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:2;">&#8592;</button>
+                        <img src="${images[0]}" alt="${item.name}" style="width:240px;height:240px;object-fit:contain;border-radius:10px;">
+                        <button type="button" class="shop-next-btn" style="display:${images.length>1?'block':'none'};position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:2;">&#8594;</button>
+                    </div>
+                    <div class="shop-item-title">${item.name}</div>
+                    <div class="shop-item-price">₱${item.price}</div>
+                    <div class="shop-item-actions">
+                        <button class="shop-item-btn" onclick="window.location='/item/${item.id}'">Item Details</button>
+                        <button class="shop-item-btn">Add to Cart</button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            $('#shop-grid').html(html);
+
+            // Attach carousel logic
+            items.forEach((item, idx) => {
+                const images = (item.images && item.images.length) ? item.images : ['/default_product_image.jpg'];
+                const carouselId = `shopCarousel${item.id}_${idx}`;
+                let imgIdx = 0;
+                const $carousel = $('#' + carouselId);
+                $carousel.data('imgIdx', 0);
+                $carousel.data('images', images);
+
+                $carousel.find('.shop-prev-btn').on('click', function () {
+                    imgIdx = ($carousel.data('imgIdx') - 1 + images.length) % images.length;
+                    $carousel.find('img').attr('src', images[imgIdx]);
+                    $carousel.data('imgIdx', imgIdx);
+                });
+                $carousel.find('.shop-next-btn').on('click', function () {
+                    imgIdx = ($carousel.data('imgIdx') + 1) % images.length;
+                    $carousel.find('img').attr('src', images[imgIdx]);
+                    $carousel.data('imgIdx', imgIdx);
+                });
+            });
+        }
+
+        // Extract search query and fetch results
+        $(document).ready(function () {
+            const params = new URLSearchParams(window.location.search);
+            const query = params.get("query");
+
+            if (query) {
+                $('#results-title').text(`Results for "${query}"`);
+                $.get(`/api/search-results?query=${encodeURIComponent(query)}`)
+                    .done(function (items) {
+                        renderItems(items);
+                    })
+                    .fail(function () {
+                        $('#shop-grid').html('<p>Failed to load search results.</p>');
+                    });
+            } else {
+                $('#results-title').text('No search query provided.');
+                $('#shop-grid').html('<p>Please go back and try searching again.</p>');
+            }
+        });
+    </script>
+</body>
+</html>

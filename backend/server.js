@@ -33,6 +33,10 @@
   app.use(express.json());
   app.use(express.static('public')); // Serve jQuery frontend
 
+  app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+
   // Serve about.html for /about
   app.get('/about', (req, res) => {
     res.sendFile('about.html', { root: 'public' });
@@ -484,6 +488,57 @@ app.post('/api/login', (req, res) => {
   });
 
   const userInfoRoute = require('./middleware/userInfo');
+
+app.get('/api/item-names', (req, res) => {
+  db.query("SELECT LOWER(name) AS name FROM items", (err, results) => {
+    if (err) {
+      console.error('Error fetching item names:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    const names = results.map(row => row.name);
+    res.json(names);
+  });
+});
+
+app.post('/api/search', (req, res) => {
+    const { query } = req.body;
+    if (!query) return res.status(400).json({ error: 'Missing search query' });
+
+    // Optionally log search, track analytics, or validate query
+    console.log('User searched for:', query);
+
+    res.status(200).json({ success: true });
+});
+
+app.get('/api/search-results', (req, res) => {
+  const query = req.query.query;
+  if (!query) {
+    return res.status(400).json({ error: 'Missing query parameter' });
+  }
+
+  const sql = `
+    SELECT i.*, GROUP_CONCAT(img.image_path) AS images
+    FROM items i
+    LEFT JOIN item_images img ON img.item_id = i.id
+    WHERE i.name LIKE ?
+    GROUP BY i.id
+  `;
+
+  db.query(sql, [`%${query}%`], (err, results) => {
+    if (err) {
+      console.error('Error fetching search results:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    // Parse image paths
+    results.forEach(item => {
+      item.images = item.images ? item.images.split(',') : [];
+    });
+
+    res.json(results);
+  });
+});
 
 
   const PORT = process.env.PORT || 3000;
