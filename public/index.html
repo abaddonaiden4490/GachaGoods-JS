@@ -111,25 +111,37 @@
     </div>
     <div id="footer-placeholder"></div>
     <script>
-    fetch('/api/user-info')
-        .then(res => res.json())
-        .then(data => {
-            let headerFile = 'header.html'; // default
-
-            if (data.role_id === 1) {
-                headerFile = 'header-admin.html';
-            } else if (data.role_id === 2) {
-                headerFile = 'header-user.html';
-            }
-
-            return fetch(`/${headerFile}`);
-        })
+    // Load default header first
+    fetch('/header.html')
         .then(res => res.text())
         .then(html => {
             document.getElementById('header-placeholder').innerHTML = html;
+
+            // After loading default header, fetch user info
+            return fetch('/api/user-info');
         })
-        .catch(err => console.error('Failed to load header:', err));
-    </script>
+        .then(res => {
+            if (!res.ok) throw new Error('User not logged in');
+            return res.json();
+        })
+        .then(data => {
+            let roleHeader = null;
+            if (data.role_id === 1) {
+                roleHeader = 'header-admin.html';
+            } else if (data.role_id === 2) {
+                roleHeader = 'header-user.html';
+            }
+
+            if (roleHeader) {
+                return fetch(`/${roleHeader}`)
+                    .then(res => res.text())
+                    .then(roleHtml => {
+                        document.getElementById('header-placeholder').innerHTML = roleHtml;
+                    });
+            }
+        })
+        .catch(err => console.warn('Optional role-based header loading skipped:', err));
+</script>
 
 </body>
 </html>

@@ -70,6 +70,8 @@
             font-size: 0.98em;
         }
     </style>
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -87,62 +89,51 @@
         <a href="/register" class="register-link">Don't have an account? Register</a>
     </div>
     <div id="footer-placeholder"></div>
+
     <script>
-    // Load header content
-    fetch('/header.html')
-        .then(res => res.text())
-        .then(html => {
-            document.getElementById('header-placeholder').innerHTML = html;
-        });
+    // Load header with jQuery
+    $('#header-placeholder').load('/header.html');
 
-    // Login AJAX logic
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
+    // Login AJAX logic using jQuery
+    $('#login-form').on('submit', function(e) {
         e.preventDefault();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const messageDiv = document.getElementById('login-message');
-        messageDiv.textContent = '';
+        const email = $('#email').val().trim();
+        const password = $('#password').val();
+        const messageDiv = $('#login-message');
+        messageDiv.text('');
 
-        try {
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                // Handle various error responses
-                if (res.status === 403 && data.error) {
-                    messageDiv.textContent = data.error; // Account deactivated
-                } else if (res.status === 401 && data.error) {
-                    messageDiv.textContent = data.error; // Invalid credentials
+        $.ajax({
+            url: '/api/login',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ email, password }),
+            success: function(data) {
+                if (data.token) {
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('user', JSON.stringify({
+                        id: data.id,
+                        name: data.name,
+                        email: data.email,
+                        role_id: data.role_id,
+                        status_id: data.status_id
+                    }));
+                    window.location.href = '/';
                 } else {
-                    messageDiv.textContent = data.error || 'Login failed.';
+                    messageDiv.text('Unexpected response from server.');
                 }
-                return;
+            },
+            error: function(xhr) {
+                const res = xhr.responseJSON;
+                if (xhr.status === 403 && res?.error) {
+                    messageDiv.text(res.error);
+                } else if (xhr.status === 401 && res?.error) {
+                    messageDiv.text(res.error);
+                } else {
+                    messageDiv.text(res?.error || 'Login failed.');
+                }
             }
-
-            // Success: store token and user info
-            if (data.token) {
-                localStorage.setItem('auth_token', data.token);
-                localStorage.setItem('user', JSON.stringify({
-                    id: data.id,
-                    name: data.name,
-                    email: data.email,
-                    role_id: data.role_id,
-                    status_id: data.status_id
-                }));
-                window.location.href = '/';
-            } else {
-                messageDiv.textContent = 'Unexpected response from server.';
-            }
-
-        } catch (err) {
-            messageDiv.textContent = 'Network error. Please try again.';
-        }
+        });
     });
-</script>
+    </script>
 </body>
 </html>
