@@ -8,10 +8,10 @@ function roleRedirect(req, res, next) {
     let redirectUrl;
     switch (user.role_id) {
         case 1:
-            redirectUrl = '/admin-dashboard.html';
+            redirectUrl = '/admin-dashboard';
             break;
         case 2:
-            redirectUrl = '/user-home.html';
+            redirectUrl = '/user-home';
             break;
         default:
             return res.status(403).json({ error: 'Forbidden: Unknown role' });

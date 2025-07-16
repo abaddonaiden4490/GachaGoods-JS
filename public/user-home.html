@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GachaGoods Otaku Merch Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- jQuery UI Autocomplete styles -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/font.otf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
+            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        h1, h2 {
+            color: #7c3aed;
+            margin-bottom: 16px;
+        }
+        p {
+            color: #444;
+            font-size: 1.1em;
+            margin-bottom: 32px;
+        }
+        .cta-btn {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 32px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .cta-btn:hover {
+            background: #5b21b6;
+        }
+        .logo {
+            width: 80px;
+            margin-bottom: 18px;
+        }
+        .header {
+            background: #7c3aed;
+            color: #fff;
+            padding: 0;
+            margin: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 28px;
+            padding: 18px 0;
+            font-size: 1.08em;
+        }
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+        .nav a:hover, .nav a.active {
+            background: #5b21b6;
+        }
+        .footer {
+            background: #f3f0ff;
+            color: #7c3aed;
+            text-align: center;
+            padding: 18px 0 12px 0;
+            font-size: 0.98em;
+            margin-top: 48px;
+            border-top: 1px solid #ececec;
+        }
+        /* Search bar style */
+        #search-bar {
+            width: 70%;
+            padding: 12px;
+            font-size: 1em;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="container">
+        <!-- Logo -->
+        <div>
+            <img src="/logo.png" alt="GachaGoods Logo" class="logo" style="height:120px;width:auto;">
+        </div>
+
+        <!-- Welcome Message -->
+        <p>
+            Welcome to GachaGoods! Discover exclusive otaku merchandise, mystery gachapon items, and limited-edition collectibles. Dive into the world of anime, games, and pop culture—one surprise at a time!
+        </p>
+
+        <!-- Video -->
+        <div style="margin-bottom:32px;">
+            <iframe width="100%" height="505" src="https://www.youtube.com/embed/sdtvUYXbWw4" 
+                title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen style="border-radius:10px;max-width:100%;"></iframe>
+        </div>
+
+        <!-- CTA -->
+        <a href="/shop" class="cta-btn">Shop Now</a>
+    </div>
+
+    <!-- Search Bar Container -->
+    <div class="container">
+        <h2>Search for Items</h2>
+        <input type="text" id="search-bar" placeholder="Search for items...">
+        <br><br>
+        <button id="search-btn" class="cta-btn">Search</button>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <!-- jQuery and jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+        // Load default header first
+        fetch('/header-user.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                return fetch('/api/user-info');
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('User not logged in');
+                return res.json();
+            })
+            .then(data => {
+                let roleHeader = null;
+                if (data.role_id === 1) {
+                    roleHeader = 'header-admin.html';
+                } else if (data.role_id === 2) {
+                    roleHeader = 'header-user.html';
+                }
+                if (roleHeader) {
+                    return fetch(`/${roleHeader}`)
+                        .then(res => res.text())
+                        .then(roleHtml => {
+                            document.getElementById('header-placeholder').innerHTML = roleHtml;
+                        });
+                }
+            })
+            .catch(err => console.warn('Optional role-based header loading skipped:', err));
+
+        // Autocomplete logic
+        $(document).ready(function () {
+            $.get('/api/item-names', function (data) {
+                $("#search-bar").autocomplete({
+                    source: data
+                });
+            });
+        });
+
+        // Search button click handler
+        $("#search-btn").click(function () {
+            const query = $("#search-bar").val().trim();
+            if (query) {
+                // Optionally call backend to log or validate search
+                $.post('/api/search', { query: query }, function () {
+                    // Redirect to search results page with query param
+                    window.location.href = `/search-results.html?query=${encodeURIComponent(query)}`;
+                }).fail(function () {
+                    alert("Failed to process search. Please try again.");
+                });
+            }
+        });
+    </script>
+</body>
+</html>

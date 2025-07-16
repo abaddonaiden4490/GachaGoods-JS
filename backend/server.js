@@ -11,6 +11,7 @@
   const jwt = require('jsonwebtoken');
   const roleRedirect = require('./middleware/redirect');
   const authenticateUser = require('./middleware/authenticateUser');
+  const verifyToken = require('./middleware/verifyToken');
   const secretKey = process.env.JWT_SECRET;
 
   // Ensure upload directory exists

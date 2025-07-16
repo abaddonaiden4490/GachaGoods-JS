@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2025 at 04:27 PM
+-- Generation Time: Jul 16, 2025 at 09:33 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -73,7 +73,8 @@ INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (32, 'D4DJ', NULL, NULL),
 (34, 'Zenless Zone Zero', NULL, NULL),
 (35, 'Punishing Gray Raven', NULL, NULL),
-(36, 'Honkai Impact 3rd', NULL, NULL);
+(36, 'Honkai Impact 3rd', NULL, NULL),
+(37, 'Tears of Themis', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -148,7 +149,12 @@ INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_
 (40, 'Cart Titan Cosplay Costume', 'ZAZAGEYOHHH!!!!!! AAAAHHHHHH!!!!', 69.69, 16, 18, NULL, NULL),
 (41, 'Emu Otori Jacket w/ Hoodie', 'Feat. Ichika Hoshino. Wonderhoy!!!!', 99.99, 11, 7, NULL, NULL),
 (42, 'Gerald', 'mabaho', 69.99, 16, 30, NULL, NULL),
-(43, 'Sakura Miko 400x400 mousepad', 'For TenZ the aimgod', 99.99, 1, 14, NULL, NULL);
+(43, 'Sakura Miko 400x400 mousepad', 'For TenZ the aimgod', 99.99, 1, 14, NULL, NULL),
+(44, 'Hu Tao Hoodie', 'hu tao', 99.99, 4, 7, NULL, NULL),
+(45, 'GOJO SATORU', 'DOMAIN XPANSION', 99.99, 22, 4, NULL, NULL),
+(46, 'YUKiNA MiNATO', 'bandori', 99.99, 8, 31, NULL, NULL),
+(47, 'KASUMi TOYAMA', 'toyama grupo', 99.99, 8, 12, NULL, NULL),
+(48, 'ee', 'ee', 99.99, 16, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -177,7 +183,13 @@ INSERT INTO `item_images` (`id`, `item_id`, `image_path`) VALUES
 (8, 43, '/uploads/1752152711686.jpg'),
 (9, 43, '/uploads/1752152711688.png'),
 (10, 43, '/uploads/1752152711688.jpg'),
-(11, 43, '/uploads/1752152711688.jpg');
+(11, 43, '/uploads/1752152711688.jpg'),
+(12, 44, '/uploads/1752545250748.jpeg'),
+(13, 44, '/uploads/1752545250752.jpeg'),
+(14, 46, '/uploads/1752557417776.jpg'),
+(15, 47, '/uploads/1752557476319.jpg'),
+(16, 47, '/uploads/1752557476324.jpg'),
+(17, 47, '/uploads/1752557476326.png');
 
 -- --------------------------------------------------------
 
@@ -405,7 +417,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (3, 'Kizuna AI', 'kizuna@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (4, 'Rem', 'rem@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (5, 'Emilia', 'emilia@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, '880b329ad5e33b7bb35b81a14aca6a7527955cf5e7d7b982e0da23511b1b962a'),
-(6, 'Megumin', 'megumin@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(6, 'Megumin', 'megumin@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, '2dedfed05c9c927a07be2e9c66decff262d3163a8e01c7cfdc7e585e493f1c97'),
 (7, 'Shiro', 'shiro@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (8, 'Kirito', 'kirito@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (9, 'Asuna', 'asuna@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
@@ -416,17 +428,18 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL),
 (16, 'Piad', 'evanpiad05@gmail.com', NULL, '$2b$10$gbcca1Ae0TcJtJIQmmXGBejJBah9rX73UdE7iNeP01fm1pXStVlDS', 1, 2, NULL),
-(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'd89d6b1d5a4be237a09fb725dac3c5d822b8fc49efe4b03329da00a3b9305938'),
+(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5hbWUiOiJKZW11ZWwgbWFsYWdhIiwiZW1haWwiOiJqb3NoYmVybmFiZTA4MjlAZ21haWwuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTI2NTAxMTMsImV4cCI6MTc1MjY1MzcxM30.XsA7Kw_Ee2hWG-IAJ3Mra4vK6LUYZs1htniH4aubv_E'),
 (18, 'Alvin Yago Comp Org', 'loisegarcia07@gmail.com', NULL, '$2b$10$4vYEJ5Oy3cU1t6SDNGkfx.ZsaBfoMDvY9IQBJq9sbFpe1p9ziEsYi', 1, 2, 'ecc1dd04c556d26ded018791af3470cf0022b9a8ac148347b6b9564f3e281362'),
 (19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 2, '7d22cb32de50682ed81c9b2ca3fc85a3fcb801cc92ae0ca36481e4952738414b'),
 (20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 1, 2, 'd938d99894e739cd455552785a61323d50a9a481c8d7b37e84f190d4d9d6abec'),
 (21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, 'eb1b72c8d7fa44164c551de327bb648c493e287935c48ad82641b63df9b770c6'),
-(22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, NULL),
-(23, 'NISTOR VALDES', 'mosyhub@gmail.com', NULL, '$2b$10$sN6ef8fCUh4DvR2lLlieL.ESEILmPXPGgP7nok8QhewZb0f9QxvJa', 2, 2, 'a79752841257a99289ecd1e54d247d73aecea04043f7b6357a7d9db1dec1799f'),
+(22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsIm5hbWUiOiJDaGVsdmluIENhbXBvcyIsImVtYWlsIjoic2FraXRlbm1hMTc2QGdtYWlsLmNvbSIsInJvbGVfaWQiOjEsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUyNjUwMDQ4LCJleHAiOjE3NTI2NTM2NDh9.TRzaz6dWPIGL-xl8fTYVjt3HJlRYLGWpZ3F2d9FSzD4'),
+(23, 'NISTOR VALDES', 'mosyhub@gmail.com', NULL, '$2b$10$sN6ef8fCUh4DvR2lLlieL.ESEILmPXPGgP7nok8QhewZb0f9QxvJa', 2, 2, '200e9e0cf4b5bce1160d347ef576e444380d7284c292e195e7b42013f2b88fa4'),
 (24, 'KiM MARiELLE PLANiLLO', 'mthreeelefex@gmail.com', NULL, '$2b$10$GtYuCo9rM79AnVmgBprE9.UO1WFRDYvI7pAtyQaTFBFK2tt/qefjO', 1, 2, NULL),
 (25, 'Lappay Grande', 'juskolord2ndyearkanawalakapangsirdalisay@gmail.com', NULL, '$2b$10$DhyhnlvhRHsxp./9ykkuD.YaRbi9YqrpquZxWP0.UPPb.8LXJoJIC', 1, 2, NULL),
 (26, 'Jexel Manalo', '2ndyearvisualbasic@gmail.com', NULL, '$2b$10$dT1P3u9gTXFeuEg8.Bw1HeqHGV6tA.6wyl8EtGvOgE3HrF.Rhmiqm', 1, 2, NULL),
-(27, 'Jett axel talaba', 'oystersss@gmail.com', NULL, '$2b$10$vAMPCdlCiqBpVkXu7Ffl5.ROTEzvMZ05NVuzAB09FUsDA9LoYwH9S', 1, 2, NULL);
+(27, 'Jett axel talaba', 'oystersss@gmail.com', NULL, '$2b$10$vAMPCdlCiqBpVkXu7Ffl5.ROTEzvMZ05NVuzAB09FUsDA9LoYwH9S', 1, 2, NULL),
+(28, 'FLINT CELETARIA THE GREAT', 'flintaxl05@gmail.com', NULL, '$2b$10$6cdIg09XfVvhrEtiL5vVm.zptKwYW5TjaApxYWdnDUUHJ8pNs6osG', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsIm5hbWUiOiJGTElOVCBDRUxFVEFSSUEgVEhFIEdSRUFUIiwiZW1haWwiOiJmbGludGF4bDA1QGdtYWlsLmNvbSIsInJvbGVfaWQiOjIsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUyNjUxMDgyLCJleHAiOjE3NTI2NTQ2ODJ9.DMeuMOCAmorrP3jwxSmoDcHv-_aGZK2AkEQazacJGDw');
 
 --
 -- Indexes for dumped tables
@@ -542,7 +555,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -554,13 +567,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `item_images`
 --
 ALTER TABLE `item_images`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `item_status`
@@ -614,7 +627,7 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- Constraints for dumped tables
