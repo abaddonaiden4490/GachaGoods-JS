@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>403 Forbidden | GachaGoods</title>
+  <style>
+    /* Custom fonts */
+    @font-face {
+      font-family: 'Yuruka';
+      src: url('yuruka.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'MainFont';
+      src: url('font.otf') format('opentype');
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'MainFont', sans-serif;
+      background: url('errorpage.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 20px;
+      backdrop-filter: brightness(0.7);
+    }
+
+    .logo {
+      width: 500px;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-family: 'Yuruka', cursive;
+      font-size: 100px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-family: 'Yuruka', cursive;
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 20px;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    a {
+      color: #ffcc00;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 18px;
+      border: 2px solid #ffcc00;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    a:hover {
+      background: #ffcc00;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <img src="logo.png" alt="GachaGoods Logo" class="logo" />
+  <h1>403</h1>
+  <h2>Forbidden</h2>
+  <p>Sorry! You don't have permission to access this page.<br>
+  This area is restricted to authorized users only.</p>
+  <a href="/">Return to Home</a>
+</body>
+</html>

@@ -552,6 +552,10 @@ app.get('/api/search-results', (req, res) => {
     res.sendFile('admin-dashboard.html', { root: 'public' });
   });
 
+   app.get('/forbidden', (req, res) => {
+    res.sendFile('403.html', { root: 'public' });
+  });
+
   app.get('/redirect', authenticateUser, roleRedirect);
 
   const PORT = process.env.PORT || 3000;
