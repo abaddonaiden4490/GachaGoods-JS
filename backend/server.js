@@ -559,6 +559,34 @@ app.get('/api/search-results', (req, res) => {
 
   app.get('/redirect', authenticateUser, roleRedirect);
 
+app.get('/api/purchased', (req, res) => {
+    const sql = `
+        SELECT 
+            p.id,
+            u.name AS user_name,
+            i.name AS product_name,
+            p.quantity,
+            p.price,
+            p.total_price,
+            s.name AS status_name
+        FROM purchased p
+        JOIN users u ON p.user_id = u.id
+        JOIN items i ON p.product_id = i.id
+        JOIN item_status s ON p.status_id = s.id
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Failed to fetch purchases' });
+        }
+
+        res.json(results);
+    });
+});
+
+
+
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);

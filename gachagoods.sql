@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2025 at 10:49 AM
+-- Generation Time: Jul 16, 2025 at 12:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -319,6 +319,13 @@ CREATE TABLE `purchased` (
   `status_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `purchased`
+--
+
+INSERT INTO `purchased` (`id`, `user_id`, `product_id`, `quantity`, `price`, `total_price`, `status_id`) VALUES
+(1, 2, 1, 5, 77.78, 388.90, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -459,12 +466,12 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL),
 (16, 'Piad', 'evanpiad05@gmail.com', NULL, '$2b$10$gbcca1Ae0TcJtJIQmmXGBejJBah9rX73UdE7iNeP01fm1pXStVlDS', 1, 2, NULL),
-(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5hbWUiOiJKZW11ZWwgbWFsYWdhIiwiZW1haWwiOiJqb3NoYmVybmFiZTA4MjlAZ21haWwuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTI2NTE5NzQsImV4cCI6MTc1MjY1NTU3NH0.-pZU3Gjs29HvztY-xMIQAer7Nu_7zlfSuEd7JY9owYI'),
+(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5hbWUiOiJKZW11ZWwgbWFsYWdhIiwiZW1haWwiOiJqb3NoYmVybmFiZTA4MjlAZ21haWwuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTI2NTYzNTYsImV4cCI6MTc1MjY1OTk1Nn0.4Ca7Ril5mgRtC5b60aR9hS1YYwoZ3uTlaqdK5HB2LOQ'),
 (18, 'Alvin Yago Comp Org', 'loisegarcia07@gmail.com', NULL, '$2b$10$4vYEJ5Oy3cU1t6SDNGkfx.ZsaBfoMDvY9IQBJq9sbFpe1p9ziEsYi', 1, 2, 'ecc1dd04c556d26ded018791af3470cf0022b9a8ac148347b6b9564f3e281362'),
 (19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 2, '7d22cb32de50682ed81c9b2ca3fc85a3fcb801cc92ae0ca36481e4952738414b'),
 (20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 1, 2, 'd938d99894e739cd455552785a61323d50a9a481c8d7b37e84f190d4d9d6abec'),
 (21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, 'eb1b72c8d7fa44164c551de327bb648c493e287935c48ad82641b63df9b770c6'),
-(22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsIm5hbWUiOiJDaGVsdmluIENhbXBvcyIsImVtYWlsIjoic2FraXRlbm1hMTc2QGdtYWlsLmNvbSIsInJvbGVfaWQiOjEsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUyNjUwMDQ4LCJleHAiOjE3NTI2NTM2NDh9.TRzaz6dWPIGL-xl8fTYVjt3HJlRYLGWpZ3F2d9FSzD4'),
+(22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsIm5hbWUiOiJDaGVsdmluIENhbXBvcyIsImVtYWlsIjoic2FraXRlbm1hMTc2QGdtYWlsLmNvbSIsInJvbGVfaWQiOjEsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUyNjU5MzEzLCJleHAiOjE3NTI2NjI5MTN9.K5ebbQUSBoN19O9SHz5l-fsWS-PCrko_CKtjObqRjCc'),
 (23, 'NISTOR VALDES', 'mosyhub@gmail.com', NULL, '$2b$10$sN6ef8fCUh4DvR2lLlieL.ESEILmPXPGgP7nok8QhewZb0f9QxvJa', 2, 2, '200e9e0cf4b5bce1160d347ef576e444380d7284c292e195e7b42013f2b88fa4'),
 (24, 'KiM MARiELLE PLANiLLO', 'mthreeelefex@gmail.com', NULL, '$2b$10$GtYuCo9rM79AnVmgBprE9.UO1WFRDYvI7pAtyQaTFBFK2tt/qefjO', 1, 2, NULL),
 (25, 'Lappay Grande', 'juskolord2ndyearkanawalakapangsirdalisay@gmail.com', NULL, '$2b$10$DhyhnlvhRHsxp./9ykkuD.YaRbi9YqrpquZxWP0.UPPb.8LXJoJIC', 1, 2, NULL),
@@ -657,7 +664,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `purchased`
 --
 ALTER TABLE `purchased`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `reviews`
