@@ -91,49 +91,70 @@
     <div id="footer-placeholder"></div>
 
     <script>
-    // Load header with jQuery
-    $('#header-placeholder').load('/header.html');
+// Load header with jQuery
+$('#header-placeholder').load('/header.html');
 
-    // Login AJAX logic using jQuery
-    $('#login-form').on('submit', function(e) {
-        e.preventDefault();
-        const email = $('#email').val().trim();
-        const password = $('#password').val();
-        const messageDiv = $('#login-message');
-        messageDiv.text('');
+// Login AJAX logic using jQuery
+$('#login-form').on('submit', function(e) {
+    e.preventDefault();
+    const email = $('#email').val().trim();
+    const password = $('#password').val();
+    const messageDiv = $('#login-message');
+    messageDiv.text('');
 
-        $.ajax({
-            url: '/api/login',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ email, password }),
-            success: function(data) {
-                if (data.token) {
-                    localStorage.setItem('auth_token', data.token);
-                    localStorage.setItem('user', JSON.stringify({
-                        id: data.id,
-                        name: data.name,
-                        email: data.email,
-                        role_id: data.role_id,
-                        status_id: data.status_id
-                    }));
-                    window.location.href = '/user-home'; // <----- SAMPLE REDIRECT PA LANG TO
-                } else {
-                    messageDiv.text('Unexpected response from server.');
-                }
-            },
-            error: function(xhr) {
-                const res = xhr.responseJSON;
-                if (xhr.status === 403 && res?.error) {
-                    messageDiv.text(res.error);
-                } else if (xhr.status === 401 && res?.error) {
-                    messageDiv.text(res.error);
-                } else {
-                    messageDiv.text(res?.error || 'Login failed.');
-                }
+    $.ajax({
+        url: '/api/login',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ email, password }),
+        success: function(data) {
+            if (data.token) {
+                localStorage.setItem('auth_token', data.token);
+                localStorage.setItem('user', JSON.stringify({
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    role_id: data.role_id,
+                    status_id: data.status_id
+                }));
+
+                // Manually request redirection endpoint
+                $.ajax({
+                    url: '/redirect',
+                    method: 'GET',
+                    headers: {
+                        Authorization: 'Bearer ' + data.token
+                    },
+                    success: function(res) {
+                        // Expect server to return a redirect URL in response
+                        if (res.redirectUrl) {
+                            window.location.href = res.redirectUrl;
+                        } else {
+                            // Fallback: go to homepage or dashboard
+                            window.location.href = '/'; // <-- update if needed
+                        }
+                    },
+                    error: function(xhr) {
+                        messageDiv.text('Redirection failed: ' + (xhr.responseJSON?.error || 'Unknown error'));
+                    }
+                });
+            } else {
+                messageDiv.text('Unexpected response from server.');
             }
-        });
+        },
+        error: function(xhr) {
+            const res = xhr.responseJSON;
+            if (xhr.status === 403 && res?.error) {
+                messageDiv.text(res.error);
+            } else if (xhr.status === 401 && res?.error) {
+                messageDiv.text(res.error);
+            } else {
+                messageDiv.text(res?.error || 'Login failed.');
+            }
+        }
     });
-    </script>
+});
+</script>
+
 </body>
 </html>

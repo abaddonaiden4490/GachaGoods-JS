@@ -8,6 +8,10 @@
   const fs = require('fs'); // <-- For folder check
   const bcrypt = require('bcrypt'); // <-- Add bcrypt for password hashing
   const crypto = require('crypto');
+  const jwt = require('jsonwebtoken');
+  const roleRedirect = require('./middleware/redirect');
+  const authenticateUser = require('./middleware/authenticateUser');
+  const secretKey = process.env.JWT_SECRET;
 
   // Ensure upload directory exists
   const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
@@ -388,14 +392,12 @@ app.post('/api/login', (req, res) => {
     }
 
     const user = results[0];
-    console.log('🔍 Debug: User status_id =', user.status_id); // << ADD THIS LINE
+    console.log('🔍 Debug: User status_id =', user.status_id);
 
-    // ✅ Check status_id before password
     if (parseInt(user.status_id) !== 1) {
-  return res.status(403).json({ error: 'Your account is deactivated. Please contact support.' });
-}
+      return res.status(403).json({ error: 'Your account is deactivated. Please contact support.' });
+    }
 
-    // ✅ Compare password
     bcrypt.compare(password, user.password, (bcryptErr, match) => {
       if (bcryptErr) {
         console.error('[LOGIN ERROR - BCRYPT]', bcryptErr);
@@ -406,23 +408,24 @@ app.post('/api/login', (req, res) => {
         return res.status(401).json({ error: 'Invalid email or password.' });
       }
 
-      const token = crypto.randomBytes(32).toString('hex');
+      const payload = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role_id: user.role_id,
+        status_id: user.status_id
+      };
+
+      const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
 
       db.query('UPDATE users SET auth_token = ? WHERE id = ?', [token, user.id], (updateErr) => {
         if (updateErr) {
-          console.error('[LOGIN ERROR - TOKEN]', updateErr);
+          console.error('[LOGIN ERROR - TOKEN UPDATE]', updateErr);
           return res.status(500).json({ error: 'Token update failed.' });
         }
 
-        // ✅ Successful login
-        res.json({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role_id: user.role_id,
-          status_id: user.status_id,
-          token
-        });
+        // ✅ Send response only once
+        return res.json({ ...payload, token });
       });
     });
   });
@@ -487,7 +490,7 @@ app.post('/api/login', (req, res) => {
     }
   });
 
-  const userInfoRoute = require('./middleware/userInfo');
+  const userInfoRoute = require('./middleware/authenticateUser');
 
 app.get('/api/item-names', (req, res) => {
   db.query("SELECT LOWER(name) AS name FROM items", (err, results) => {
@@ -544,6 +547,12 @@ app.get('/api/search-results', (req, res) => {
   app.get('/user-home', (req, res) => {
     res.sendFile('user-home.html', { root: 'public' });
   });
+
+  app.get('/admin-dashboard', (req, res) => {
+    res.sendFile('admin-dashboard.html', { root: 'public' });
+  });
+
+  app.get('/redirect', authenticateUser, roleRedirect);
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
