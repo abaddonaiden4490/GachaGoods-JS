@@ -1,18 +1,24 @@
 function roleRedirect(req, res, next) {
-    const user = req.user; // This assumes you have a middleware that attaches the user info to req.user
+    const user = req.user;
 
     if (!user || !user.role_id) {
         return res.status(401).json({ error: 'Unauthorized: No user role found' });
     }
 
+    let redirectUrl;
     switch (user.role_id) {
         case 1:
-            return res.redirect('/admin-dashboard.html');
+            redirectUrl = '/admin-dashboard.html';
+            break;
         case 2:
-            return res.redirect('/user-home.html');
+            redirectUrl = '/user-home.html';
+            break;
         default:
             return res.status(403).json({ error: 'Forbidden: Unknown role' });
     }
+
+    // ✅ Send as JSON so jQuery can read it and redirect on the client
+    return res.json({ redirectUrl });
 }
 
-module.exports = roleRedirect;
+        module.exports = roleRedirect;
