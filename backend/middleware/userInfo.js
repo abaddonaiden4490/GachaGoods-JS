@@ -1,4 +1,4 @@
-// routes/userInfo.js
+// SAMPLE PA LANG TO, BABAGUHIN PA YAN
 const express = require('express');
 const router = express.Router();
 const db = require('../db');

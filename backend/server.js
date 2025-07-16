@@ -541,6 +541,10 @@ app.get('/api/search-results', (req, res) => {
 });
 
 
+  app.get('/user-home', (req, res) => {
+    res.sendFile('user-home.html', { root: 'public' });
+  });
+
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
