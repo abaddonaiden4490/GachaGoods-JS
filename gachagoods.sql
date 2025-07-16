@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2025 at 09:33 AM
+-- Generation Time: Jul 16, 2025 at 10:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `gachagoods`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `item_id` bigint(20) UNSIGNED NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -253,9 +267,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 CREATE TABLE `orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `status_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `total` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `item_id` bigint(20) UNSIGNED NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -287,6 +302,22 @@ CREATE TABLE `personal_access_tokens` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `purchased`
+--
+
+CREATE TABLE `purchased` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `status_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -428,7 +459,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL),
 (16, 'Piad', 'evanpiad05@gmail.com', NULL, '$2b$10$gbcca1Ae0TcJtJIQmmXGBejJBah9rX73UdE7iNeP01fm1pXStVlDS', 1, 2, NULL),
-(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5hbWUiOiJKZW11ZWwgbWFsYWdhIiwiZW1haWwiOiJqb3NoYmVybmFiZTA4MjlAZ21haWwuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTI2NTAxMTMsImV4cCI6MTc1MjY1MzcxM30.XsA7Kw_Ee2hWG-IAJ3Mra4vK6LUYZs1htniH4aubv_E'),
+(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5hbWUiOiJKZW11ZWwgbWFsYWdhIiwiZW1haWwiOiJqb3NoYmVybmFiZTA4MjlAZ21haWwuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTI2NTE5NzQsImV4cCI6MTc1MjY1NTU3NH0.-pZU3Gjs29HvztY-xMIQAer7Nu_7zlfSuEd7JY9owYI'),
 (18, 'Alvin Yago Comp Org', 'loisegarcia07@gmail.com', NULL, '$2b$10$4vYEJ5Oy3cU1t6SDNGkfx.ZsaBfoMDvY9IQBJq9sbFpe1p9ziEsYi', 1, 2, 'ecc1dd04c556d26ded018791af3470cf0022b9a8ac148347b6b9564f3e281362'),
 (19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 2, '7d22cb32de50682ed81c9b2ca3fc85a3fcb801cc92ae0ca36481e4952738414b'),
 (20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 1, 2, 'd938d99894e739cd455552785a61323d50a9a481c8d7b37e84f190d4d9d6abec'),
@@ -439,11 +470,19 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (25, 'Lappay Grande', 'juskolord2ndyearkanawalakapangsirdalisay@gmail.com', NULL, '$2b$10$DhyhnlvhRHsxp./9ykkuD.YaRbi9YqrpquZxWP0.UPPb.8LXJoJIC', 1, 2, NULL),
 (26, 'Jexel Manalo', '2ndyearvisualbasic@gmail.com', NULL, '$2b$10$dT1P3u9gTXFeuEg8.Bw1HeqHGV6tA.6wyl8EtGvOgE3HrF.Rhmiqm', 1, 2, NULL),
 (27, 'Jett axel talaba', 'oystersss@gmail.com', NULL, '$2b$10$vAMPCdlCiqBpVkXu7Ffl5.ROTEzvMZ05NVuzAB09FUsDA9LoYwH9S', 1, 2, NULL),
-(28, 'FLINT CELETARIA THE GREAT', 'flintaxl05@gmail.com', NULL, '$2b$10$6cdIg09XfVvhrEtiL5vVm.zptKwYW5TjaApxYWdnDUUHJ8pNs6osG', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsIm5hbWUiOiJGTElOVCBDRUxFVEFSSUEgVEhFIEdSRUFUIiwiZW1haWwiOiJmbGludGF4bDA1QGdtYWlsLmNvbSIsInJvbGVfaWQiOjIsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUyNjUxMDgyLCJleHAiOjE3NTI2NTQ2ODJ9.DMeuMOCAmorrP3jwxSmoDcHv-_aGZK2AkEQazacJGDw');
+(28, 'FLINT CELETARIA THE GREAT', 'flintaxl05@gmail.com', NULL, '$2b$10$6cdIg09XfVvhrEtiL5vVm.zptKwYW5TjaApxYWdnDUUHJ8pNs6osG', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsIm5hbWUiOiJGTElOVCBDRUxFVEFSSUEgVEhFIEdSRUFUIiwiZW1haWwiOiJmbGludGF4bDA1QGdtYWlsLmNvbSIsInJvbGVfaWQiOjIsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUyNjUyMjY0LCJleHAiOjE3NTI2NTU4NjR9.GdfTUnwdj9fT3pcqaZi4j7hIQqM-VHwYM47yr2_ci8w');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `item_id` (`item_id`);
 
 --
 -- Indexes for table `categories`
@@ -492,8 +531,8 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `orders_user_id_foreign` (`user_id`),
-  ADD KEY `orders_status_id_foreign` (`status_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `item_id` (`item_id`);
 
 --
 -- Indexes for table `password_reset_tokens`
@@ -508,6 +547,15 @@ ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
+
+--
+-- Indexes for table `purchased`
+--
+ALTER TABLE `purchased`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `status_id` (`status_id`);
 
 --
 -- Indexes for table `reviews`
@@ -550,6 +598,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -600,6 +654,12 @@ ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `purchased`
+--
+ALTER TABLE `purchased`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
@@ -634,6 +694,13 @@ ALTER TABLE `users`
 --
 
 --
+-- Constraints for table `cart`
+--
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `items`
 --
 ALTER TABLE `items`
@@ -650,8 +717,16 @@ ALTER TABLE `item_images`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `statuses` (`id`) ON DELETE SET NULL,
-  ADD CONSTRAINT `orders_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `purchased`
+--
+ALTER TABLE `purchased`
+  ADD CONSTRAINT `purchased_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `purchased_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `purchased_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `item_status` (`id`);
 
 --
 -- Constraints for table `reviews`
