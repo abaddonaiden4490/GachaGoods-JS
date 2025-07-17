@@ -12,6 +12,7 @@
   const roleRedirect = require('./middleware/redirect');
   const authenticateUser = require('./middleware/authenticateUser');
   const verifyToken = require('./middleware/verifyToken');
+  const nodemailer = require('nodemailer');
   const secretKey = process.env.JWT_SECRET;
 
   // Ensure upload directory exists
@@ -40,6 +41,14 @@
 
   app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 
   // Serve about.html for /about
@@ -599,23 +608,89 @@ app.put('/api/purchased/:id/status', (req, res) => {
     const { id } = req.params;
     const { status_id } = req.body;
 
-    if (!status_id) {
-        return res.status(400).json({ error: 'Missing status_id' });
-    }
+    if (!status_id) return res.status(400).json({ error: 'Missing status_id' });
 
-    db.query(
-        'UPDATE purchased SET status_id = ? WHERE id = ?',
-        [status_id, id],
-        (err, results) => {
-            if (err) {
-                console.error('Error updating status:', err);
-                return res.status(500).json({ error: 'Update failed' });
-            }
-            res.json({ success: true });
+    // Update purchase status
+    db.query('UPDATE purchased SET status_id = ? WHERE id = ?', [status_id, id], (err) => {
+        if (err) {
+            console.error('Error updating status:', err);
+            return res.status(500).json({ error: 'Update failed' });
         }
-    );
-});
 
+        // Get updated purchase details
+        db.query(`
+            SELECT u.email, u.name AS user_name, i.name AS product_name, s.name AS status_name
+            FROM purchased p
+            JOIN users u ON p.user_id = u.id
+            JOIN items i ON p.product_id = i.id
+            JOIN item_status s ON p.status_id = s.id
+            WHERE p.id = ?
+        `, [id], (err, rows) => {
+            if (err) {
+                console.error('Error fetching purchase details:', err);
+                return res.status(500).json({ error: 'Fetch failed' });
+            }
+
+            const purchase = rows[0];
+            if (!purchase) return res.status(404).json({ error: 'Purchase not found' });
+
+            // Dynamic status message
+            let statusMessage = '';
+            switch (purchase.status_name.toLowerCase()) {
+                case 'pending':
+                    statusMessage = 'Your order is now pending. We will process it shortly.';
+                    break;
+                case 'processing':
+                    statusMessage = 'Your order is being processed. Hang tight!';
+                    break;
+                case 'delivered':
+                    statusMessage = 'Great news! Your order has been delivered.';
+                    break;
+                case 'cancelled':
+                    statusMessage = 'We’re sorry to inform you that your order has been cancelled.';
+                    break;
+                case 'returned':
+                    statusMessage = 'Your order has been marked as returned. Please contact support if needed.';
+                    break;
+                default:
+                    statusMessage = `Your order status has been updated to: ${purchase.status_name}`;
+            }
+
+            // Email transporter setup
+            const transporter = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS
+                }
+            });
+
+            const mailOptions = {
+                from: `GachaGoods <${process.env.EMAIL_USER}>`,
+                to: purchase.email,
+                subject: `Your GachaGoods Order is ${purchase.status_name}`,
+                html: `
+                    <p>Hi ${purchase.user_name},</p>
+                    <p>${statusMessage}</p>
+                    <p><strong>Item:</strong> ${purchase.product_name}</p>
+                    <br>
+                    <p>Thank you for shopping at <strong>GachaGoods</strong>!</p>
+                    <p style="color:#888;font-size:0.9em;">This is an automated message. Please do not reply.</p>
+                `
+            };
+
+            // Send email
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    console.error('Error sending email:', err);
+                    return res.status(500).json({ error: 'Failed to send email' });
+                }
+
+                res.json({ message: 'Status updated and email sent' });
+            });
+        });
+    });
+});
 
 
 
