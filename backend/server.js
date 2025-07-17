@@ -13,6 +13,7 @@
   const authenticateUser = require('./middleware/authenticateUser');
   const verifyToken = require('./middleware/verifyToken');
   const nodemailer = require('nodemailer');
+  const PDFDocument = require('pdfkit');
   const secretKey = process.env.JWT_SECRET;
 
   // Ensure upload directory exists
@@ -610,16 +611,15 @@ app.put('/api/purchased/:id/status', (req, res) => {
 
     if (!status_id) return res.status(400).json({ error: 'Missing status_id' });
 
-    // Update purchase status
     db.query('UPDATE purchased SET status_id = ? WHERE id = ?', [status_id, id], (err) => {
         if (err) {
             console.error('Error updating status:', err);
             return res.status(500).json({ error: 'Update failed' });
         }
 
-        // Get updated purchase details
+        // Fetch purchase + user + item + status
         db.query(`
-            SELECT u.email, u.name AS user_name, i.name AS product_name, s.name AS status_name
+            SELECT u.email, u.name AS user_name, i.name AS product_name, i.price, p.quantity, p.total_price, s.name AS status_name
             FROM purchased p
             JOIN users u ON p.user_id = u.id
             JOIN items i ON p.product_id = i.id
@@ -634,59 +634,96 @@ app.put('/api/purchased/:id/status', (req, res) => {
             const purchase = rows[0];
             if (!purchase) return res.status(404).json({ error: 'Purchase not found' });
 
-            // Dynamic status message
+            // Create status message
             let statusMessage = '';
             switch (purchase.status_name.toLowerCase()) {
-                case 'pending':
-                    statusMessage = 'Your order is now pending. We will process it shortly.';
-                    break;
-                case 'processing':
-                    statusMessage = 'Your order is being processed. Hang tight!';
-                    break;
-                case 'delivered':
-                    statusMessage = 'Great news! Your order has been delivered.';
-                    break;
-                case 'cancelled':
-                    statusMessage = 'We’re sorry to inform you that your order has been cancelled.';
-                    break;
-                case 'returned':
-                    statusMessage = 'Your order has been marked as returned. Please contact support if needed.';
-                    break;
-                default:
-                    statusMessage = `Your order status has been updated to: ${purchase.status_name}`;
+                case 'pending': statusMessage = 'Your order is now pending. We will process it shortly.'; break;
+                case 'processing': statusMessage = 'Your order is being processed. Hang tight!'; break;
+                case 'delivered': statusMessage = 'Great news! Your order has been delivered.'; break;
+                case 'cancelled': statusMessage = 'We’re sorry to inform you that your order has been cancelled.'; break;
+                case 'returned': statusMessage = 'Your order has been marked as returned. Please contact support if needed.'; break;
+                default: statusMessage = `Your order status has been updated to: ${purchase.status_name}`;
             }
 
-            // Email transporter setup
-            const transporter = nodemailer.createTransport({
-                service: 'Gmail',
-                auth: {
-                    user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASS
-                }
-            });
+            // Generate PDF receipt
+const doc = new PDFDocument();
+const filePath = path.join(__dirname, `receipt-${id}.pdf`);
+const writeStream = fs.createWriteStream(filePath);
+doc.pipe(writeStream);
 
-            const mailOptions = {
-                from: `GachaGoods <${process.env.EMAIL_USER}>`,
-                to: purchase.email,
-                subject: `Your GachaGoods Order is ${purchase.status_name}`,
-                html: `
-                    <p>Hi ${purchase.user_name},</p>
-                    <p>${statusMessage}</p>
-                    <p><strong>Item:</strong> ${purchase.product_name}</p>
-                    <br>
-                    <p>Thank you for shopping at <strong>GachaGoods</strong>!</p>
-                    <p style="color:#888;font-size:0.9em;">This is an automated message. Please do not reply.</p>
-                `
-            };
+// Add logo
+const logoPath = path.join(__dirname, 'logo.png');
+if (fs.existsSync(logoPath)) {
+    doc.image(logoPath, { fit: [100, 100], align: 'center' });
+}
 
-            // Send email
-            transporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    console.error('Error sending email:', err);
-                    return res.status(500).json({ error: 'Failed to send email' });
-                }
+doc.moveDown();
+doc.fontSize(20).text('GachaGoods Order Receipt', { align: 'center' });
+doc.moveDown(1.5);
 
-                res.json({ message: 'Status updated and email sent' });
+// Customer info
+doc.fontSize(12).text(`Customer: ${purchase.user_name}`);
+doc.text(`Email: ${purchase.email}`);
+doc.moveDown();
+
+// Order details table
+doc.font('Helvetica-Bold').text('Item', 100, doc.y, { continued: true });
+doc.text('Qty', 250, doc.y, { continued: true });
+doc.text('Price', 300, doc.y, { continued: true });
+doc.text('Total', 400, doc.y);
+doc.moveDown(0.5);
+
+doc.font('Helvetica').text(purchase.product_name, 100, doc.y, { continued: true });
+doc.text(purchase.quantity.toString(), 250, doc.y, { continued: true });
+doc.text(`$${Number(purchase.price).toFixed(2)}`, 300, doc.y, { continued: true });
+doc.text(`$${Number(purchase.total_price).toFixed(2)}`, 400, doc.y);
+doc.moveDown(1);
+
+// Order status
+doc.font('Helvetica-Bold').text(`Order Status: ${purchase.status_name}`);
+doc.end();
+
+            writeStream.on('finish', () => {
+                // Email setup
+                const transporter = nodemailer.createTransport({
+                    service: 'Gmail',
+                    auth: {
+                        user: process.env.EMAIL_USER,
+                        pass: process.env.EMAIL_PASS
+                    }
+                });
+
+                const mailOptions = {
+                    from: `GachaGoods <${process.env.EMAIL_USER}>`,
+                    to: purchase.email,
+                    subject: `Your GachaGoods Order is ${purchase.status_name}`,
+                    html: `
+                        <p>Hi ${purchase.user_name},</p>
+                        <p>${statusMessage}</p>
+                        <p><strong>Item:</strong> ${purchase.product_name}</p>
+                        <br>
+                        <p>Thank you for shopping at <strong>GachaGoods</strong>!</p>
+                        <p style="color:#888;font-size:0.9em;">This is an automated message. Please do not reply.</p>
+                    `,
+                    attachments: [
+                        {
+                            filename: `receipt-${id}.pdf`,
+                            path: filePath
+                        }
+                    ]
+                };
+
+                transporter.sendMail(mailOptions, (err, info) => {
+                    // Remove the file after sending
+                    fs.unlink(filePath, () => {});
+
+                    if (err) {
+                        console.error('Error sending email:', err);
+                        return res.status(500).json({ error: 'Failed to send email' });
+                    }
+
+                    res.json({ message: 'Status updated and receipt emailed' });
+                });
             });
         });
     });
