@@ -244,6 +244,11 @@
         }
 
         $(document).ready(function() {
+            // Hide manage dropdown for non-admins (including logged-in users who are not admin)
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            if (!user || user.role_id != 1) {
+                $('#manageDropdown').hide();
+            }
             // Clear grid before first load to ensure only first 6 items are shown initially
             $('#shop-grid').empty();
             loadItems();

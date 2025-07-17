@@ -1,63 +1,114 @@
 <header class="header" style="background:#fff; color:#00ffff; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-    <div style="display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 32px;">
-        <a href="/" style="display:flex;align-items:center;">
-            <img src="/logo.png" alt="GachaGoods Logo" style="height:48px;width:auto;">
-        </a>
-        <div style="display:flex;align-items:center;gap:24px;">
-            <nav class="nav" style="display:flex;gap:28px;padding:18px 0;font-size:1.08em;">
-                <a href="/user-home" id="nav-home" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Home</a>
-                <a href="/shop" id="nav-shop" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Shop</a>
-                <a href="/about" id="nav-about" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">About</a>
-                <a href="/contact" id="nav-contact" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Contact</a>
-            </nav>
-            <div id="header-userbox" style="display:none;align-items:center;gap:10px;">
-                <span id="header-welcome" style="color:#7c3aed;font-weight:bold;"></span>
-                <span id="header-hello" style="color:#7c3aed;"></span>
-                <div id="header-userdropdown" style="position:relative;">
-                    <button id="header-userbtn" style="background:#7c3aed;color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:1em;cursor:pointer;">
-                        Hello, <span id="header-username"></span>!
-                    </button>
-                    <div id="header-dropdownmenu" style="display:none;position:absolute;right:0;top:110%;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-width:160px;z-index:100;">
-                        <a href="/profile" style="display:block;padding:10px 18px;color:#7c3aed;text-decoration:none;border-bottom:1px solid #eee;">Edit Profile</a>
-                        <button id="header-logout" style="width:100%;background:none;color:#e11d48;border:none;padding:10px 18px;text-align:left;cursor:pointer;">Logout</button>
-                    </div>
-                </div>
-            </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;padding:0 32px;">
+    <a href="/" style="display:flex;align-items:center;">
+      <img src="/logo.png" alt="GachaGoods Logo" style="height:48px;width:auto;">
+    </a>
+    <div style="display:flex;align-items:center;gap:24px;">
+      <nav class="nav" style="display:flex;gap:28px;padding:18px 0;font-size:1.08em;">
+        <a href="/user-home" id="nav-home" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Home</a>
+        <a href="/shop" id="nav-shop" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Shop</a>
+        <a href="/about" id="nav-about" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">About</a>
+        <a href="/contact" id="nav-contact" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Contact</a>
+        <a href="/totalsales" id="nav-totalsales" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Total Sales</a>
+        <a href="/manage" id="nav-manage" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Manage</a>
+        <a href="/login" id="nav-login" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Login</a>
+        <a href="/register" id="nav-register" style="color:#00ffff;text-decoration:none;padding:6px 10px;border-radius:4px;transition:background 0.15s;">Register</a>
+      </nav>
+
+      <div id="header-userbox" style="display:none;align-items:center;gap:10px;">
+        <span id="header-welcome" style="color:#7c3aed;font-weight:bold;"></span>
+        <span id="header-hello" style="color:#7c3aed;"></span>
+        <div id="header-userdropdown" style="position:relative;">
+          <button id="header-userbtn" style="background:#7c3aed;color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:1em;cursor:pointer;">
+            Hello, <span id="header-username"></span>!
+          </button>
+          <div id="header-dropdownmenu" style="display:none;position:absolute;right:0;top:110%;background:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-width:160px;z-index:100;">
+            <a href="/profile" style="display:block;padding:10px 18px;color:#7c3aed;text-decoration:none;border-bottom:1px solid #eee;">Edit Profile</a>
+          </div>
         </div>
+        <button id="header-logout" style="background:#e11d48;color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:1em;cursor:pointer;">
+          Logout
+        </button>
+      </div>
     </div>
+  </div>
 </header>
+
 <script>
 (function() {
     function updateHeaderLinks() {
-        const user = JSON.parse(localStorage.getItem('user') || 'null');
-        const isAdmin = user && user.role_id == 1;
-        // Hide total sales, login, register if logged in
-        document.getElementById('nav-totalsales').style.display = user ? 'none' : '';
-        document.getElementById('nav-login').style.display = user ? 'none' : '';
-        document.getElementById('nav-register').style.display = user ? 'none' : '';
-        // Show manage only for admin
-        document.getElementById('nav-manage').style.display = isAdmin ? '' : 'none';
-        // Show welcome and dropdown if logged in
+        const token = localStorage.getItem('auth_token');
         const userBox = document.getElementById('header-userbox');
         const usernameSpan = document.getElementById('header-username');
         const welcome = document.getElementById('header-welcome');
         const hello = document.getElementById('header-hello');
-        if (user) {
-            userBox.style.display = 'flex';
-            usernameSpan.textContent = user.name || user.username || 'User';
-            welcome.textContent = `Welcome, ${user.name || user.username || 'User'}!!!`;
-            hello.textContent = `Hello, ${user.name || user.username || 'User'}!`;
-        } else {
+
+        // 🔍 Debugging Logs
+        console.log('Token:', token);
+        console.log('User (raw):', localStorage.getItem('user'));
+
+        if (!token) {
             userBox.style.display = 'none';
-            usernameSpan.textContent = '';
-            welcome.textContent = '';
-            hello.textContent = '';
+            document.getElementById('nav-manage')?.style.display = 'none';
+            document.getElementById('nav-login')?.style.display = '';
+            document.getElementById('nav-register')?.style.display = '';
+            document.getElementById('nav-totalsales')?.style.display = '';
+            return;
         }
+
+        fetch('/api/me', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token }
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Token expired or invalid');
+            return res.json();
+        })
+        .then(user => {
+            console.log('Fetched user:', user); // 🧠 Log parsed user from server
+
+            localStorage.setItem('user', JSON.stringify(user));
+
+            userBox.style.display = 'flex';
+            const displayName = user.name || user.username || 'User';
+            usernameSpan.textContent = displayName;
+            welcome.textContent = `Welcome, ${displayName}!!!`;
+            hello.textContent = `Hello, ${displayName}!`;
+
+            document.getElementById('nav-login')?.style.display = 'none';
+            document.getElementById('nav-register')?.style.display = 'none';
+            document.getElementById('nav-totalsales')?.style.display = 'none';
+            document.getElementById('nav-manage')?.style.display = user.role_id == 1 ? '' : 'none';
+        })
+        .catch(err => {
+            console.error('Error fetching user info:', err);
+
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+            userBox.style.display = 'none';
+            document.getElementById('nav-manage')?.style.display = 'none';
+            document.getElementById('nav-login')?.style.display = '';
+            document.getElementById('nav-register')?.style.display = '';
+            document.getElementById('nav-totalsales')?.style.display = '';
+        });
+
         document.getElementById('header-dropdownmenu').style.display = 'none';
     }
-    document.addEventListener('DOMContentLoaded', updateHeaderLinks);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateHeaderLinks();
+
+        document.getElementById('header-logout').onclick = function() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        };
+    });
+
+    // Fallback in case DOMContentLoaded is too early
     setTimeout(updateHeaderLinks, 100);
 
+    // Toggle dropdown menu
     document.addEventListener('click', function(e) {
         const userBtn = document.getElementById('header-userbtn');
         const dropdown = document.getElementById('header-dropdownmenu');
@@ -65,11 +116,6 @@
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         } else if (!dropdown.contains(e.target)) {
             dropdown.style.display = 'none';
-        }
-        if (e.target && e.target.id === 'header-logout') {
-            localStorage.removeItem('auth_token');
-            localStorage.removeItem('user');
-            window.location.href = '/';
         }
     });
 })();

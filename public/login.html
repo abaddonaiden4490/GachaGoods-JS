@@ -118,26 +118,12 @@ $('#login-form').on('submit', function(e) {
                     status_id: data.status_id
                 }));
 
-                // Manually request redirection endpoint
-                $.ajax({
-                    url: '/redirect',
-                    method: 'GET',
-                    headers: {
-                        Authorization: 'Bearer ' + data.token
-                    },
-                    success: function(res) {
-                        // Expect server to return a redirect URL in response
-                        if (res.redirectUrl) {
-                            window.location.href = res.redirectUrl;
-                        } else {
-                            // Fallback: go to homepage or dashboard
-                            window.location.href = '/'; // <-- update if needed
-                        }
-                    },
-                    error: function(xhr) {
-                        messageDiv.text('Redirection failed: ' + (xhr.responseJSON?.error || 'Unknown error'));
-                    }
-                });
+                // Redirect based on role
+                if (data.role_id == 1) {
+                    window.location.href = '/admin-dashboard';
+                } else {
+                    window.location.href = '/user-home'; // or '/shop'
+                }
             } else {
                 messageDiv.text('Unexpected response from server.');
             }

@@ -14,6 +14,9 @@
   const verifyToken = require('./middleware/verifyToken');
   const nodemailer = require('nodemailer');
   const PDFDocument = require('pdfkit');
+  const roleChecker = require('./middleware/rolechecker'); // adjust path as needed
+  const router = express.Router();
+  const loadHeader = require('./middleware/loadHeader');
   const secretKey = process.env.JWT_SECRET;
 
   // Ensure upload directory exists
@@ -309,19 +312,22 @@ const transporter = nodemailer.createTransport({
 
 
 
-  // Serve manage pages
-  app.get('/manage/products', (req, res) => {
-      res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'products.html'));
-  });
-  app.get('/manage/categories', (req, res) => {
-      res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'categories.html'));
-  });
-  app.get('/manage/types', (req, res) => {
-      res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'types.html'));
-  });
-  app.get('/manage/users', (req, res) => {
-      res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'users.html'));
-  });
+// Serve manage pages — with roleChecker added
+app.get('/manage/products', roleChecker, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'products.html'));
+});
+
+app.get('/manage/categories', roleChecker, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'categories.html'));
+});
+
+app.get('/manage/types', roleChecker, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'types.html'));
+});
+
+app.get('/manage/users', roleChecker, (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'users.html'));
+});
 
 
   app.get('/api/users', (req, res) => {
@@ -729,6 +735,31 @@ doc.end();
     });
 });
 
+// Logout API
+app.post('/api/logout', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1]; // e.g. "Bearer abc123"
+
+    if (!token) {
+        return res.status(401).json({ error: 'No token provided.' });
+    }
+
+    try {
+        const [result] = await db.query('UPDATE users SET auth_token = NULL WHERE auth_token = ?', [token]);
+
+        if (result.affectedRows === 0) {
+            return res.status(400).json({ error: 'Invalid token or user not found.' });
+        }
+
+        res.json({ message: 'Successfully logged out.' });
+    } catch (err) {
+        console.error('Logout error:', err);
+        res.status(500).json({ error: 'Server error during logout.' });
+    }
+});
+
+router.get('/api/me', authenticateUser, (req, res) => {
+    res.json(req.user); // sends { id, name, email, role_id, status_id }
+});
 
 
   const PORT = process.env.PORT || 3000;

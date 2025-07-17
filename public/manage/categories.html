@@ -84,6 +84,12 @@
 <!-- jQuery Validation plugin -->
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
 <script>
+// Redirect non-admins
+const user = JSON.parse(localStorage.getItem('user') || 'null');
+if (!user || user.role_id != 1) {
+    window.location.href = '/shop'; // or '/user-home'
+}
+
 // Load header
 fetch('/header.html')
     .then(res => res.text())
