@@ -433,6 +433,13 @@ app.post('/api/login', (req, res) => {
       return res.status(403).json({ error: 'Your account is deactivated. Please contact support.' });
     }
 
+    // 🔍 DEBUG: Check if user already has an active session token
+    if (user.auth_token) {
+      console.log(`⚠️ Debug: Existing session token detected for user ID ${user.id}: ${user.auth_token}`);
+    } else {
+      console.log(`✅ Debug: No existing session token for user ID ${user.id}`);
+    }
+
     bcrypt.compare(password, user.password, (bcryptErr, match) => {
       if (bcryptErr) {
         console.error('[LOGIN ERROR - BCRYPT]', bcryptErr);
@@ -459,7 +466,8 @@ app.post('/api/login', (req, res) => {
           return res.status(500).json({ error: 'Token update failed.' });
         }
 
-        // ✅ Send response only once
+        console.log(`🔐 Debug: New token issued for user ID ${user.id}`);
+
         return res.json({ ...payload, token });
       });
     });
