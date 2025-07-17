@@ -54,6 +54,24 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+function servePageWithHeader(pageFilename) {
+    return [loadHeader, (req, res) => {
+        const htmlPath = path.join(__dirname, 'public', pageFilename);
+        const headerPath = res.locals.headerPath;
+
+        try {
+            const html = fs.readFileSync(htmlPath, 'utf-8');
+            const header = fs.readFileSync(headerPath, 'utf-8');
+            const finalHtml = html.replace('<!--HEADER-->', header);
+            res.send(finalHtml);
+        } catch (err) {
+            console.error('Error loading page or header:', err);
+            res.status(500).send('Internal Server Error');
+        }
+    }];
+}
+
+
 
   // Serve about.html for /about
   app.get('/about', (req, res) => {
@@ -313,19 +331,19 @@ const transporter = nodemailer.createTransport({
 
 
 // Serve manage pages — with roleChecker added
-app.get('/manage/products', roleChecker, (req, res) => {
+app.get('/manage/products', authenticateUser, roleChecker, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'products.html'));
 });
 
-app.get('/manage/categories', roleChecker, (req, res) => {
+app.get('/manage/categories', authenticateUser, roleChecker, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'categories.html'));
 });
 
-app.get('/manage/types', roleChecker, (req, res) => {
+app.get('/manage/types', authenticateUser, roleChecker, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'types.html'));
 });
 
-app.get('/manage/users', roleChecker, (req, res) => {
+app.get('/manage/users', authenticateUser, roleChecker, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'users.html'));
 });
 
@@ -736,7 +754,7 @@ doc.end();
 });
 
 // Logout API
-app.post('/api/logout', async (req, res) => {
+app.post('/api/logout', authenticateUser, async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1]; // e.g. "Bearer abc123"
 
     if (!token) {

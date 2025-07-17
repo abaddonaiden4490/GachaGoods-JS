@@ -1,25 +1,32 @@
-const express = require('express');
-const router = express.Router();
-const db = require('../db');
 const jwt = require('jsonwebtoken');
+const db = require('../db'); // adjust path if needed
 const secretKey = process.env.JWT_SECRET;
 
-function authenticateUser(req, res, next) {
-    const authHeader = req.headers.authorization;
+module.exports = async function authenticateUser(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Format: "Bearer token"
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
         return res.status(401).json({ error: 'Unauthorized: No token provided' });
     }
 
-    const token = authHeader.split(' ')[1];
-
     try {
         const decoded = jwt.verify(token, secretKey);
-        req.user = decoded; // decoded should contain id, name, email, role_id, etc.
+
+        // Optional but secure: check if the token is still in DB
+        const [rows] = await db.query(
+            'SELECT * FROM users WHERE id = ? AND auth_token = ?',
+            [decoded.id, token]
+        );
+
+        if (!rows.length) {
+            return res.status(401).json({ error: 'Unauthorized: Invalid or expired token' });
+        }
+
+        req.user = decoded; // Attach user info to request
         next();
     } catch (err) {
-        return res.status(401).json({ error: 'Invalid or expired token' });
+        console.error('Auth error:', err);
+        return res.status(403).json({ error: 'Forbidden: Failed to authenticate token' });
     }
-}
-
-module.exports = authenticateUser;
+};
