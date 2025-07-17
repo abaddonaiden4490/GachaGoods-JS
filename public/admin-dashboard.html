@@ -14,6 +14,7 @@
             font-family: 'CustomFont';
             src: url('/font.otf') format('truetype');
         }
+
         body {
             font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
             background: url('/wallpaper.jpg') no-repeat center center fixed;
@@ -21,6 +22,7 @@
             margin: 0;
             padding: 0;
         }
+
         .container {
             max-width: 1000px;
             margin: 60px auto;
@@ -29,13 +31,16 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             padding: 40px 30px;
         }
+
         h1, h2 {
             color: #7c3aed;
         }
+
         .logo {
             width: 80px;
             margin-bottom: 18px;
         }
+
         .footer {
             background: #f3f0ff;
             color: #7c3aed;
@@ -45,8 +50,94 @@
             margin-top: 48px;
             border-top: 1px solid #ececec;
         }
+
         #purchased-table {
             margin-top: 20px;
+        }
+
+        /* Modal base styling */
+        #statusModal {
+            font-family: 'CustomFont', 'Segoe UI', sans-serif;
+        }
+
+        /* Style the form inside the modal */
+        #updateStatusForm {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px;
+        }
+
+        /* Style for select box */
+        #statusSelect {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        /* Submit button inside form */
+        #updateStatusForm button[type="submit"] {
+            background-color: #7c3aed;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #updateStatusForm button[type="submit"]:hover {
+            background-color: #5b21b6;
+        }
+
+        /* jQuery UI dialog overrides */
+        .ui-dialog-titlebar {
+            background-color: #7c3aed;
+            color: white;
+            border: none;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            padding: 10px 15px;
+            font-size: 1.1em;
+        }
+
+        .ui-dialog-titlebar-close {
+            color: white;
+        }
+
+        .ui-dialog-content {
+            background-color: #fff;
+            padding: 20px !important;
+            font-size: 1em;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .ui-dialog-buttonpane {
+            background: #f3f0ff;
+            border-top: none;
+            padding: 10px 15px;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .ui-button {
+            background-color: #e0e7ff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            color: #1e1b4b;
+            cursor: pointer;
+            font-weight: 500;
+            font-family: inherit;
+            transition: background-color 0.2s ease;
+        }
+
+        .ui-button:hover {
+            background-color: #c7d2fe;
         }
     </style>
 </head>
@@ -71,10 +162,23 @@
                     <th>Price</th>
                     <th>Total Price</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
+    </div>
+
+    <!-- Modal for status editing -->
+    <div id="statusModal" title="Update Purchase Status" style="display:none;">
+        <form id="updateStatusForm">
+            <input type="hidden" id="purchaseId">
+            <label for="statusSelect">Select New Status:</label>
+            <select id="statusSelect" name="status_id" required></select>
+            <div style="margin-top: 20px; text-align: right;">
+                <button type="submit">Update</button>
+            </div>
+        </form>
     </div>
 
     <!-- Scripts -->
@@ -104,9 +208,23 @@
             })
             .catch(err => console.warn('Optional role-based header loading skipped:', err));
 
-        // Initialize DataTable for purchases
+        let itemStatuses = [];
+
+        function loadStatuses() {
+            return fetch('/api/item-status')
+                .then(res => res.json())
+                .then(data => {
+                    itemStatuses = data;
+                    const select = $('#statusSelect');
+                    select.empty();
+                    data.forEach(status => {
+                        select.append(`<option value="${status.id}">${status.name}</option>`);
+                    });
+                });
+        }
+
         $(document).ready(function () {
-            $('#purchased-table').DataTable({
+            const table = $('#purchased-table').DataTable({
                 ajax: {
                     url: '/api/purchased',
                     dataSrc: ''
@@ -118,13 +236,58 @@
                     { data: 'quantity' },
                     { data: 'price' },
                     { data: 'total_price' },
-                    { data: 'status_name' }
+                    { data: 'status_name' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return `<button class="edit-status-btn" data-id="${row.id}" data-status="${row.status_name}">Edit Status</button>`;
+                        }
+                    }
                 ],
                 responsive: true,
                 order: [[0, 'desc']],
                 language: {
                     emptyTable: "No purchases found"
                 }
+            });
+
+            loadStatuses(); // Load status options once
+
+            $('#purchased-table tbody').on('click', '.edit-status-btn', function () {
+                const purchaseId = $(this).data('id');
+                const rowData = table.row($(this).parents('tr')).data();
+                const currentStatus = rowData.status_name;
+
+                $('#purchaseId').val(purchaseId);
+                $('#statusSelect').val(itemStatuses.find(s => s.name === currentStatus)?.id || '');
+
+                $('#statusModal').dialog({
+                    modal: true,
+                    width: 400,
+                    buttons: {
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            });
+
+            $('#updateStatusForm').on('submit', function (e) {
+                e.preventDefault();
+                const id = $('#purchaseId').val();
+                const newStatusId = $('#statusSelect').val();
+
+                fetch(`/api/purchased/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status_id: newStatusId })
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to update status');
+                    $('#statusModal').dialog('close');
+                    table.ajax.reload(null, false);
+                })
+                .catch(err => alert(err.message));
             });
         });
     </script>

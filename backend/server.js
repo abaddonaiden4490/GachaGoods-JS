@@ -585,6 +585,38 @@ app.get('/api/purchased', (req, res) => {
     });
 });
 
+app.get('/api/item-status', (req, res) => {
+    db.query('SELECT id, name FROM item_status ORDER BY id', (err, results) => {
+        if (err) {
+            console.error('Error fetching item statuses:', err);
+            return res.status(500).json({ error: 'Failed to fetch item statuses' });
+        }
+        res.json(results);
+    });
+});
+
+app.put('/api/purchased/:id/status', (req, res) => {
+    const { id } = req.params;
+    const { status_id } = req.body;
+
+    if (!status_id) {
+        return res.status(400).json({ error: 'Missing status_id' });
+    }
+
+    db.query(
+        'UPDATE purchased SET status_id = ? WHERE id = ?',
+        [status_id, id],
+        (err, results) => {
+            if (err) {
+                console.error('Error updating status:', err);
+                return res.status(500).json({ error: 'Update failed' });
+            }
+            res.json({ success: true });
+        }
+    );
+});
+
+
 
 
   const PORT = process.env.PORT || 3000;
