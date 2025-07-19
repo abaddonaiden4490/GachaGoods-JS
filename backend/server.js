@@ -14,7 +14,6 @@
   const verifyToken = require('./middleware/verifyToken');
   const nodemailer = require('nodemailer');
   const PDFDocument = require('pdfkit');
-  const roleChecker = require('./middleware/rolechecker'); // adjust path as needed
   const router = express.Router();
   const loadHeader = require('./middleware/loadHeader');
   const secretKey = process.env.JWT_SECRET;
@@ -330,20 +329,20 @@ function servePageWithHeader(pageFilename) {
 
 
 
-// Serve manage pages — with roleChecker added
-app.get('/manage/products', authenticateUser, roleChecker, (req, res) => {
+// Serve manage pages
+app.get('/manage/products', authenticateUser, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'products.html'));
 });
 
-app.get('/manage/categories', authenticateUser, roleChecker, (req, res) => {
+app.get('/manage/categories', authenticateUser, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'categories.html'));
 });
 
-app.get('/manage/types', authenticateUser, roleChecker, (req, res) => {
+app.get('/manage/types', authenticateUser, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'types.html'));
 });
 
-app.get('/manage/users', authenticateUser, roleChecker, (req, res) => {
+app.get('/manage/users', authenticateUser, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'users.html'));
 });
 
