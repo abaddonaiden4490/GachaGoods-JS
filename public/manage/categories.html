@@ -87,7 +87,7 @@
 // Redirect non-admins
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (!user || user.role_id != 1) {
-    window.location.href = '/shop'; // or '/user-home'
+    window.location.href = '/forbidden'; // or '/user-home'
 }
 
 // Load header

@@ -10,7 +10,6 @@
   const crypto = require('crypto');
   const jwt = require('jsonwebtoken');
   const roleRedirect = require('./middleware/redirect');
-  const authenticateUser = require('./middleware/authenticateUser');
   const verifyToken = require('./middleware/verifyToken');
   const nodemailer = require('nodemailer');
   const PDFDocument = require('pdfkit');
@@ -330,19 +329,19 @@ function servePageWithHeader(pageFilename) {
 
 
 // Serve manage pages
-app.get('/manage/products', authenticateUser, (req, res) => {
+app.get('/manage/products', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'products.html'));
 });
 
-app.get('/manage/categories', authenticateUser, (req, res) => {
+app.get('/manage/categories', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'categories.html'));
 });
 
-app.get('/manage/types', authenticateUser, (req, res) => {
+app.get('/manage/types', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'types.html'));
 });
 
-app.get('/manage/users', authenticateUser, (req, res) => {
+app.get('/manage/users', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage', 'users.html'));
 });
 
@@ -598,7 +597,7 @@ app.get('/api/search-results', (req, res) => {
     res.sendFile('403.html', { root: 'public' });
   });
 
-  app.get('/redirect', authenticateUser, roleRedirect);
+  app.get('/redirect', roleRedirect);
 
 app.get('/api/purchased', (req, res) => {
     const sql = `
@@ -761,7 +760,7 @@ doc.end();
 });
 
 // Logout API
-app.post('/api/logout', authenticateUser, async (req, res) => {
+app.post('/api/logout', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1]; // e.g. "Bearer abc123"
 
     if (!token) {
@@ -782,7 +781,7 @@ app.post('/api/logout', authenticateUser, async (req, res) => {
     }
 });
 
-router.get('/api/me', authenticateUser, (req, res) => {
+router.get('/api/me', (req, res) => {
     res.json(req.user); // sends { id, name, email, role_id, status_id }
 });
 
