@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const roleMap = {
         1: 'Admin',
-        2: 'User'
+        2: 'Customer'
     };
 
     const setText = (id, value) => {
