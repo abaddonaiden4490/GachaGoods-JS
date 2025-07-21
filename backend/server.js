@@ -676,13 +676,13 @@ app.put('/api/purchased/:id/status', (req, res) => {
             }
 
             // Generate PDF receipt
-const doc = new PDFDocument();
+const doc = new PDFDocument({ margin: 50 });
 const filePath = path.join(__dirname, `receipt-${id}.pdf`);
 const writeStream = fs.createWriteStream(filePath);
 doc.pipe(writeStream);
 
 // Add logo
-const logoPath = path.join(__dirname, 'logo.png');
+const logoPath = path.join(__dirname, '..', 'public', 'logo.png');
 if (fs.existsSync(logoPath)) {
     doc.image(logoPath, { fit: [100, 100], align: 'center' });
 }
@@ -691,26 +691,61 @@ doc.moveDown();
 doc.fontSize(20).text('GachaGoods Order Receipt', { align: 'center' });
 doc.moveDown(1.5);
 
-// Customer info
-doc.fontSize(12).text(`Customer: ${purchase.user_name}`);
-doc.text(`Email: ${purchase.email}`);
-doc.moveDown();
-
-// Order details table
-doc.font('Helvetica-Bold').text('Item', 100, doc.y, { continued: true });
-doc.text('Qty', 250, doc.y, { continued: true });
-doc.text('Price', 300, doc.y, { continued: true });
-doc.text('Total', 400, doc.y);
-doc.moveDown(0.5);
-
-doc.font('Helvetica').text(purchase.product_name, 100, doc.y, { continued: true });
-doc.text(purchase.quantity.toString(), 250, doc.y, { continued: true });
-doc.text(`$${Number(purchase.price).toFixed(2)}`, 300, doc.y, { continued: true });
-doc.text(`$${Number(purchase.total_price).toFixed(2)}`, 400, doc.y);
+// Customer Info
+doc.fontSize(12).font('Helvetica-Bold').text(`Customer: `, { continued: true })
+   .font('Helvetica').text(`${purchase.user_name}`);
+doc.font('Helvetica-Bold').text(`Email: `, { continued: true })
+   .font('Helvetica').text(`${purchase.email}`);
 doc.moveDown(1);
 
-// Order status
-doc.font('Helvetica-Bold').text(`Order Status: ${purchase.status_name}`);
+// Table Header
+const tableTop = doc.y;
+const rowHeight = 20;
+const colWidths = {
+    item: 150,
+    qty: 70,
+    price: 100,
+    total: 100
+};
+const startX = 100;
+
+// Draw header background
+doc.rect(startX, tableTop, colWidths.item + colWidths.qty + colWidths.price + colWidths.total, rowHeight)
+    .fill('#f0f0f0')
+    .stroke();
+
+// Table header text
+doc.fillColor('black')
+   .font('Helvetica-Bold')
+   .fontSize(12)
+   .text('Item', startX + 5, tableTop + 5)
+   .text('Qty', startX + colWidths.item + 5, tableTop + 5)
+   .text('Price', startX + colWidths.item + colWidths.qty + 5, tableTop + 5)
+   .text('Total', startX + colWidths.item + colWidths.qty + colWidths.price + 5, tableTop + 5);
+
+// Draw row
+const rowY = tableTop + rowHeight;
+doc.rect(startX, rowY, colWidths.item + colWidths.qty + colWidths.price + colWidths.total, rowHeight)
+    .stroke();
+
+// Table row text
+doc.font('Helvetica')
+   .fontSize(12)
+   .text(purchase.product_name, startX + 5, rowY + 5)
+   .text(purchase.quantity.toString(), startX + colWidths.item + 5, rowY + 5)
+   .text(`$${Number(purchase.price).toFixed(2)}`, startX + colWidths.item + colWidths.qty + 5, rowY + 5)
+   .text(`$${Number(purchase.total_price).toFixed(2)}`, startX + colWidths.item + colWidths.qty + colWidths.price + 5, rowY + 5);
+
+// Move down after table
+doc.moveDown(3);
+
+// Order status section
+doc.font('Helvetica-Bold')
+   .fontSize(12)
+   .text(`Order Status: `, { continued: true })
+   .font('Helvetica')
+   .text(`${purchase.status_name}`);
+
 doc.end();
 
             writeStream.on('finish', () => {

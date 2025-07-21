@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2025 at 11:15 AM
+-- Generation Time: Jul 21, 2025 at 12:08 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -88,7 +88,9 @@ INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (34, 'Zenless Zone Zero', NULL, NULL),
 (35, 'Punishing Gray Raven', NULL, NULL),
 (36, 'Honkai Impact 3rd', NULL, NULL),
-(37, 'Tears of Themis', NULL, NULL);
+(37, 'Tears of Themis', NULL, NULL),
+(39, 'Wuthering Waves', NULL, NULL),
+(40, 'NIKKE: Goddess of Victory', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -168,7 +170,8 @@ INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_
 (45, 'GOJO SATORU', 'DOMAIN XPANSION', 99.99, 22, 4, NULL, NULL),
 (46, 'YUKiNA MiNATO', 'bandori', 99.99, 8, 31, NULL, NULL),
 (47, 'KASUMi TOYAMA', 'toyama grupo', 99.99, 8, 12, NULL, NULL),
-(48, 'ee', 'ee', 99.99, 16, 1, NULL, NULL);
+(48, 'ee', 'ee', 99.99, 16, 1, NULL, NULL),
+(49, 'AiSCREAM Hoodie', 'RUBY CHAN? HAI? NANI GA SUKI?? CHOKO MINTO YORI NO ANATA!! >:(', 99.99, 9, 7, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -203,7 +206,11 @@ INSERT INTO `item_images` (`id`, `item_id`, `image_path`) VALUES
 (14, 46, '/uploads/1752557417776.jpg'),
 (15, 47, '/uploads/1752557476319.jpg'),
 (16, 47, '/uploads/1752557476324.jpg'),
-(17, 47, '/uploads/1752557476326.png');
+(17, 47, '/uploads/1752557476326.png'),
+(18, 49, '/uploads/1753089846638.jpg'),
+(19, 49, '/uploads/1753089846641.jpeg'),
+(20, 49, '/uploads/1753089846641.jpeg'),
+(21, 49, '/uploads/1753089846642.jpg');
 
 -- --------------------------------------------------------
 
@@ -326,7 +333,7 @@ CREATE TABLE `purchased` (
 INSERT INTO `purchased` (`id`, `user_id`, `product_id`, `quantity`, `price`, `total_price`, `status_id`) VALUES
 (1, 2, 1, 5, 77.78, 388.90, 1),
 (2, 21, 32, 10, 99.99, 999.90, 4),
-(3, 17, 22, 10, 79.84, 798.40, 3);
+(3, 17, 22, 10, 79.84, 798.40, 2);
 
 -- --------------------------------------------------------
 
@@ -473,13 +480,13 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 2, NULL),
 (20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 1, 2, NULL),
 (21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, NULL),
-(22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, NULL),
+(22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsIm5hbWUiOiJDaGVsdmluIENhbXBvcyIsImVtYWlsIjoic2FraXRlbm1hMTc2QGdtYWlsLmNvbSIsInJvbGVfaWQiOjEsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUzMDkxOTEyLCJleHAiOjE3NTMwOTU1MTJ9.v4R9abc3syFM0lM8bgPn_AmPxuzb1E9a2pc_i8rHU8o'),
 (23, 'NISTOR VALDES', 'mosyhub@gmail.com', NULL, '$2b$10$sN6ef8fCUh4DvR2lLlieL.ESEILmPXPGgP7nok8QhewZb0f9QxvJa', 2, 2, NULL),
 (24, 'KiM MARiELLE PLANiLLO', 'mthreeelefex@gmail.com', NULL, '$2b$10$GtYuCo9rM79AnVmgBprE9.UO1WFRDYvI7pAtyQaTFBFK2tt/qefjO', 1, 2, NULL),
 (25, 'Lappay Grande', 'juskolord2ndyearkanawalakapangsirdalisay@gmail.com', NULL, '$2b$10$DhyhnlvhRHsxp./9ykkuD.YaRbi9YqrpquZxWP0.UPPb.8LXJoJIC', 1, 2, NULL),
 (26, 'Jexel Manalo', '2ndyearvisualbasic@gmail.com', NULL, '$2b$10$dT1P3u9gTXFeuEg8.Bw1HeqHGV6tA.6wyl8EtGvOgE3HrF.Rhmiqm', 1, 2, NULL),
-(27, 'Jett axel talaba', 'oystersss@gmail.com', NULL, '$2b$10$vAMPCdlCiqBpVkXu7Ffl5.ROTEzvMZ05NVuzAB09FUsDA9LoYwH9S', 1, 2, NULL),
-(28, 'FLINT CELETARIA THE GREAT', 'flintaxl05@gmail.com', NULL, '$2b$10$6cdIg09XfVvhrEtiL5vVm.zptKwYW5TjaApxYWdnDUUHJ8pNs6osG', 1, 2, NULL);
+(27, 'Jett axel talaba', 'oystersss@gmail.com', NULL, '$2b$10$vAMPCdlCiqBpVkXu7Ffl5.ROTEzvMZ05NVuzAB09FUsDA9LoYwH9S', 1, 1, NULL),
+(28, 'FLINT CELETARIA THE GREAT', 'flintaxl05@gmail.com', NULL, '$2b$10$6cdIg09XfVvhrEtiL5vVm.zptKwYW5TjaApxYWdnDUUHJ8pNs6osG', 2, 2, NULL);
 
 --
 -- Indexes for dumped tables
@@ -618,7 +625,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -630,13 +637,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `item_images`
 --
 ALTER TABLE `item_images`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `item_status`
