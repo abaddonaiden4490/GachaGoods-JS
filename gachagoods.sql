@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2025 at 02:27 PM
+-- Generation Time: Jul 21, 2025 at 03:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -334,7 +334,10 @@ CREATE TABLE `purchased` (
 INSERT INTO `purchased` (`id`, `user_id`, `product_id`, `quantity`, `price`, `total_price`, `status_id`) VALUES
 (1, 2, 1, 5, 77.78, 388.90, 1),
 (2, 21, 32, 10, 99.99, 999.90, 1),
-(3, 17, 22, 10, 79.84, 798.40, 2);
+(3, 17, 22, 10, 79.84, 798.40, 2),
+(4, 21, 2, 1, 62.35, 62.35, 1),
+(5, 21, 3, 3, 44.31, 132.93, 1),
+(6, 21, 42, 99, 69.99, 6929.01, 1);
 
 -- --------------------------------------------------------
 
@@ -480,7 +483,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (18, 'Alvin Yago Comp Org', 'loisegarcia07@gmail.com', NULL, '$2b$10$4vYEJ5Oy3cU1t6SDNGkfx.ZsaBfoMDvY9IQBJq9sbFpe1p9ziEsYi', 1, 2, NULL),
 (19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 2, NULL),
 (20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 1, 2, NULL),
-(21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, NULL),
+(21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsIm5hbWUiOiJSb3ZpYyBBYm9uaXRhIiwiZW1haWwiOiJheGlzdGhlbWluZWNyYWZ0ZXhwZXJ0QGdtYWlsLmNvbSIsInJvbGVfaWQiOjIsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUzMTAwODk5LCJleHAiOjE3NTMxMDQ0OTl9.lCy_qUcPBW-nDuDBuyYZZs_8XHK-DkQfIMiUeORvfSM'),
 (22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, NULL),
 (23, 'NISTOR VALDES', 'mosyhub@gmail.com', NULL, '$2b$10$sN6ef8fCUh4DvR2lLlieL.ESEILmPXPGgP7nok8QhewZb0f9QxvJa', 2, 2, NULL),
 (24, 'KiM MARiELLE PLANiLLO', 'mthreeelefex@gmail.com', NULL, '$2b$10$GtYuCo9rM79AnVmgBprE9.UO1WFRDYvI7pAtyQaTFBFK2tt/qefjO', 1, 2, NULL),
@@ -620,7 +623,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -674,7 +677,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `purchased`
 --
 ALTER TABLE `purchased`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `reviews`

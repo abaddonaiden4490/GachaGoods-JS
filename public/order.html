@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order Item | GachaGoods Otaku Merch Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <style>
+    @font-face {
+      font-family: 'CustomFont';
+      src: url('/font.otf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
+      background: url('/wallpaper.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      padding: 40px 36px;
+      text-align: center;
+    }
+    .item-img {
+      width: 260px;
+      height: 260px;
+      object-fit: contain;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      background: #f7f7fa;
+    }
+    .item-title {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #7c3aed;
+      margin-bottom: 12px;
+    }
+    .item-price {
+      color: #1e40af;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-bottom: 18px;
+    }
+    .item-desc {
+      color: #444;
+      font-size: 1.08em;
+      margin-bottom: 24px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      font-size: 1.1em;
+    }
+    .form-group input {
+      width: 80px;
+      padding: 8px;
+      font-size: 1em;
+      text-align: center;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .order-btn {
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 32px;
+      font-size: 1.08em;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: background 0.15s;
+    }
+    .order-btn:hover {
+      background: #5b21b6;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      color: #7c3aed;
+      text-decoration: underline;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div class="container" id="order-container">
+    <!-- Content will be rendered by JS -->
+  </div>
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function getItemId() {
+      const match = window.location.pathname.match(/\/order\/(\d+)/);
+      return match ? match[1] : null;
+    }
+
+    const itemId = getItemId();
+    const container = document.getElementById('order-container');
+
+    if (!itemId) {
+      container.innerHTML = '<p>Invalid item.</p>';
+    } else {
+      fetch(`/api/item/${itemId}`)
+        .then(res => res.json())
+        .then(item => {
+          if (!item || item.error) {
+            container.innerHTML = '<p>Item not found.</p>';
+            return;
+          }
+
+          container.innerHTML = `
+            <a href="/shop" class="back-link">&larr; Back to Shop</a>
+            <img src="${item.images?.[0] || '/default_product_image.jpg'}" alt="Product Image" class="item-img">
+            <div class="item-title">${item.name}</div>
+            <div class="item-price">₱${item.price}</div>
+            <div class="item-desc">${item.description || ''}</div>
+
+            <div class="form-group">
+              <label for="quantity">Quantity:</label><br>
+              <input type="number" id="quantity" name="quantity" min="1" value="1" />
+            </div>
+
+            <button class="order-btn" id="orderNowBtn">Order Now</button>
+          `;
+
+          document.getElementById('orderNowBtn').addEventListener('click', () => {
+            const quantity = parseInt(document.getElementById('quantity').value, 10);
+            if (isNaN(quantity) || quantity < 1) {
+              alert('Please enter a valid quantity.');
+              return;
+            }
+
+            fetch('/api/order', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('auth_token') || ''}`
+              },
+              body: JSON.stringify({ item_id: item.id, quantity })
+            })
+              .then(res => res.json())
+              .then(data => {
+                if (data.success) {
+                  alert('Order placed successfully!');
+                  window.location.href = '/cart';
+                } else {
+                  alert(data.message || 'Failed to place order.');
+                }
+              })
+              .catch(() => {
+                alert('Error placing order.');
+              });
+          });
+        })
+        .catch(() => {
+          container.innerHTML = '<p>Failed to load item.</p>';
+        });
+    }
+  </script>
+  <script src="/js/loadHeader.js"></script>
+    <script src="/js/session-middleware.js"></script>
+</body>
+</html>

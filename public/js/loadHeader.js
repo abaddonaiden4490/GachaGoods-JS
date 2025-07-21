@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
         '/about',
         '/contact',
         /^\/item\/\d+$/,
+        /^\/order\/\d+$/,
         '/search-results.html',
         '/cart'
     ];

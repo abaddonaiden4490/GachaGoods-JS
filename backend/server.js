@@ -816,20 +816,135 @@ app.get('/api/cart', verifyToken, (req, res) => {
     const userId = req.user.id; // set in verifyToken
 
     const sql = `
-        SELECT item_id, quantity, price, total_price
+        SELECT 
+            cart.item_id, 
+            items.name AS item_name, 
+            cart.quantity, 
+            cart.price, 
+            cart.total_price
         FROM cart
-        WHERE user_id = ?
+        JOIN items ON cart.item_id = items.id
+        WHERE cart.user_id = ?
     `;
 
     db.query(sql, [userId], (err, results) => {
         if (err) {
-            console.error('Error fetching cart:', err);
+            console.error('Error fetching cart with item names:', err);
             return res.status(500).json({ error: 'Database error' });
         }
 
-        res.json(results); // send cart rows
+        res.json(results); // send cart rows with item names
     });
 });
+
+
+app.post('/api/order', authenticateUser, (req, res) => {
+  const { item_id, quantity } = req.body;
+  const user_id = req.user.id;
+
+  if (!item_id || !quantity || quantity <= 0) {
+    return res.status(400).json({ error: 'Invalid input' });
+  }
+
+  const sql = `
+    INSERT INTO cart (user_id, item_id, quantity, price, total_price)
+    VALUES (
+      ?, ?, ?, 
+      (SELECT price FROM items WHERE id = ?),
+      (SELECT price FROM items WHERE id = ?) * ?
+    )
+  `;
+
+  db.query(sql, [user_id, item_id, quantity, item_id, item_id, quantity], (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ error: 'Failed to place order' });
+    }
+    res.json({ success: true });
+  });
+});
+
+app.post('/api/transaction', authenticateUser, (req, res) => {
+    const userId = req.user.id;
+
+    db.beginTransaction(err => {
+        if (err) {
+            console.error('Transaction begin failed:', err);
+            return res.status(500).json({ error: 'Transaction failed to start' });
+        }
+
+        // Step 1: Get cart items
+        db.query(
+            'SELECT item_id AS product_id, quantity, price, total_price FROM cart WHERE user_id = ?',
+            [userId],
+            (err, results) => {
+                if (err) {
+                    return db.rollback(() => {
+                        console.error('Failed to fetch cart:', err);
+                        res.status(500).json({ error: 'Failed to fetch cart' });
+                    });
+                }
+
+                if (results.length === 0) {
+                    return res.status(400).json({ error: 'Cart is empty' });
+                }
+
+                // Step 2: Prepare insert data
+                const insertData = results.map(item => [
+                    userId,
+                    item.product_id,
+                    item.quantity,
+                    item.price,
+                    item.total_price,
+                    1 // status_id
+                ]);
+
+                // Step 3: Insert into purchased
+                db.query(
+                    'INSERT INTO purchased (user_id, product_id, quantity, price, total_price, status_id) VALUES ?',
+                    [insertData],
+                    (err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                console.error('Insert into purchased failed:', err);
+                                res.status(500).json({ error: 'Failed to insert into purchased' });
+                            });
+                        }
+
+                        // Step 4: Delete cart items
+                        db.query(
+                            'DELETE FROM cart WHERE user_id = ?',
+                            [userId],
+                            (err) => {
+                                if (err) {
+                                    return db.rollback(() => {
+                                        console.error('Cart deletion failed:', err);
+                                        res.status(500).json({ error: 'Failed to clear cart' });
+                                    });
+                                }
+
+                                // Step 5: Commit transaction
+                                db.commit(err => {
+                                    if (err) {
+                                        return db.rollback(() => {
+                                            console.error('Commit failed:', err);
+                                            res.status(500).json({ error: 'Failed to commit transaction' });
+                                        });
+                                    }
+
+                                    res.json({ message: 'Transaction completed' });
+                                });
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    });
+});
+
+
+
 
 
   const PORT = process.env.PORT || 3000;

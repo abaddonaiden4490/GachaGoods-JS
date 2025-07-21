@@ -132,7 +132,7 @@
                             <span style="color:#7c3aed;font-weight:bold;">Type:</span>
                             <span>${item.type_name || 'N/A'}</span>
                         </div>
-                        <button class="shop-item-btn">Add to Cart</button>
+                        <button class="shop-item-btn" onclick="window.location='/order/${item.id}'"">Add to Cart</button>
                     `;
                     // Carousel navigation
                     let images = item.images && item.images.length ? item.images : ['/default_product_image.jpg'];
