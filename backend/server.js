@@ -11,6 +11,7 @@
   const jwt = require('jsonwebtoken');
   const roleRedirect = require('./middleware/redirect');
   const verifyToken = require('./middleware/verifyToken');
+    const authenticateUser = require('./middleware/authenticateUser');
   const nodemailer = require('nodemailer');
   const PDFDocument = require('pdfkit');
   const router = express.Router();
@@ -809,6 +810,25 @@ app.post('/api/logout', (req, res) => {
             res.status(200).json({ success: true, message: 'Successfully logged out.' });
         }
     );
+});
+
+app.get('/api/cart', verifyToken, (req, res) => {
+    const userId = req.user.id; // set in verifyToken
+
+    const sql = `
+        SELECT item_id, quantity, price, total_price
+        FROM cart
+        WHERE user_id = ?
+    `;
+
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching cart:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        res.json(results); // send cart rows
+    });
 });
 
 

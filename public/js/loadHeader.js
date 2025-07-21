@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
         '/about',
         '/contact',
         /^\/item\/\d+$/,
-        '/search-results.html'
+        '/search-results.html',
+        '/cart'
     ];
 
     const matchesTarget = targetPaths.some((route) =>

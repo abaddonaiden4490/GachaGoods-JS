@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cart | GachaGoods Otaku Merch Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Custom Font -->
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/font.otf') format('opentype');
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'CustomFont', sans-serif;
+            background-image: url('/wallpaper.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 80px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        table.dataTable {
+            width: 100%;
+        }
+    </style>
+
+    <!-- jQuery + DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+
+    <!-- Header loaded dynamically -->
+    <header id="header-placeholder"></header>
+
+    <div class="container">
+        <h1>Your Shopping Cart</h1>
+        <table id="cartTable" class="display">
+            <thead>
+                <tr>
+                    <th>Item ID</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be injected by JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/session-middleware.js"></script>
+    <script src="/js/loadHeader.js"></script>
+    <script src="/js/display-user.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = localStorage.getItem('auth_token');
+
+            fetch('/api/cart', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(res => {
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+})
+            .then(data => {
+                const tbody = document.querySelector('#cartTable tbody');
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.item_id}</td>
+                        <td>${row.quantity}</td>
+                        <td>₱${parseFloat(row.price).toFixed(2)}</td>
+                        <td>₱${(row.quantity * row.price).toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                $('#cartTable').DataTable();
+            })
+            .catch(err => {
+                console.error('Failed to load cart data:', err);
+                alert('Could not load your cart. Please try again.');
+            });
+        });
+    </script>
+
+</body>
+</html>
