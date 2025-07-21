@@ -83,10 +83,7 @@
     </div>
     <div id="footer-placeholder"></div>
     <script>
-        fetch('/header.html')
-            .then(res => res.text())
-            .then(html => document.getElementById('header-placeholder').innerHTML = html);
-
+        
         // Get item id from URL (/item/:id)
         function getItemId() {
             const match = window.location.pathname.match(/\/item\/(\d+)/);
@@ -154,5 +151,6 @@
                 });
         }
     </script>
+    <script src="/js/loadHeader.js"></script>
 </body>
 </html>

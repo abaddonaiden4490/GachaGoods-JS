@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const publicPages = ['/', '/login', '/register', '/forbidden', '/about', '/contact', '/shop'].map(normalize);
         const adminPages = ['/admin-dashboard', '/total-sales', '/manage/categories', '/manage/products', '/manage/types', '/manage/users'].map(normalize);
-        const userPages = ['/user-home'].map(normalize);
+        const userPages = ['/user-home', '/cart', '/order/:id'].map(normalize);
         const guestOnlyPages = ['/', '/login', '/register'].map(normalize);
 
         // 🚫 Guest access to protected pages

@@ -163,10 +163,6 @@
             }
         });
 
-        fetch('/header.html')
-            .then(res => res.text())
-            .then(html => document.getElementById('header-placeholder').innerHTML = html);
-
         // Infinite scroll variables
         let page = 1;
         const limit = 6;
@@ -260,5 +256,6 @@
             });
         });
     </script>
+    <script src="/js/loadHeader.js"></script>
 </body>
 </html>

@@ -14,7 +14,6 @@
   const nodemailer = require('nodemailer');
   const PDFDocument = require('pdfkit');
   const router = express.Router();
-  const loadHeader = require('./middleware/loadHeader');
   const secretKey = process.env.JWT_SECRET;
 
   // Ensure upload directory exists
@@ -52,25 +51,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-function servePageWithHeader(pageFilename) {
-    return [loadHeader, (req, res) => {
-        const htmlPath = path.join(__dirname, 'public', pageFilename);
-        const headerPath = res.locals.headerPath;
-
-        try {
-            const html = fs.readFileSync(htmlPath, 'utf-8');
-            const header = fs.readFileSync(headerPath, 'utf-8');
-            const finalHtml = html.replace('<!--HEADER-->', header);
-            res.send(finalHtml);
-        } catch (err) {
-            console.error('Error loading page or header:', err);
-            res.status(500).send('Internal Server Error');
-        }
-    }];
-}
-
-
-
   // Serve about.html for /about
   app.get('/about', (req, res) => {
     res.sendFile('about.html', { root: 'public' });
@@ -95,6 +75,14 @@ function servePageWithHeader(pageFilename) {
 
   app.get('/total-sales', (req, res) => {
     res.sendFile('total-sales.html', { root: 'public' });
+  });
+
+  app.get('/cart', (req, res) => {
+    res.sendFile('cart.html', { root: 'public' });
+  });
+
+  app.get('/order/:id', (req, res) => {
+    res.sendFile('order.html', { root: 'public' });
   });
 
   // API endpoint to get items from the database
