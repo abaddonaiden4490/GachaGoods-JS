@@ -760,7 +760,7 @@ doc.end();
 });
 
 // POST /api/logout
-app.post('/api/logout', async (req, res) => {
+app.post('/api/logout', (req, res) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -769,27 +769,23 @@ app.post('/api/logout', async (req, res) => {
 
     const token = authHeader.split(' ')[1];
 
-    try {
-        const [result] = await db.query(
-            'UPDATE users SET auth_token = NULL WHERE auth_token = ?',
-            [token]
-        );
+    db.query(
+        'UPDATE users SET auth_token = NULL WHERE auth_token = ?',
+        [token],
+        (err, result) => {
+            if (err) {
+                console.error('Logout error:', err);
+                return res.status(500).json({ error: 'Server error during logout.' });
+            }
 
-        if (result.affectedRows === 0) {
-            return res.status(400).json({ error: 'Invalid token or user not found.' });
+            if (result.affectedRows === 0) {
+                return res.status(400).json({ error: 'Invalid token or user not found.' });
+            }
+
+            console.log(`[LOGOUT] User with token ${token.slice(0, 8)}... logged out`);
+            res.status(200).json({ success: true, message: 'Successfully logged out.' });
         }
-
-        console.log(`[LOGOUT] User with token ${token.slice(0, 8)}... logged out`);
-
-        res.status(200).json({ success: true, message: 'Successfully logged out.' });
-    } catch (err) {
-        console.error('Logout error:', err);
-        res.status(500).json({ error: 'Server error during logout.' });
-    }
-});
-
-router.get('/api/me', (req, res) => {
-    res.json(req.user); // sends { id, name, email, role_id, status_id }
+    );
 });
 
 

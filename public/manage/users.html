@@ -15,7 +15,7 @@
         }
         body {
             font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
-            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background: url('/wallpaper-admin.jpeg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 0;
@@ -30,7 +30,7 @@
 <body>
     <div id="header-container"></div>
     <script>
-        fetch('/header.html')
+        fetch('/header-admin.html')
             .then(res => res.text())
             .then(html => {
                 document.getElementById('header-container').innerHTML = html;

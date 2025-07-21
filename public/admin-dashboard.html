@@ -17,7 +17,7 @@
 
         body {
             font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
-            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background: url('/wallpaper-admin.jpeg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 0;
@@ -150,6 +150,9 @@
             <img src="/logo-admin.png" alt="GachaGoods Logo" class="logo" style="height:120px;width:auto;">
             <p>Welcome to GachaGoods Admin Dashboard! View all purchases made by users here.</p>
             <p style="text-align:center;">You are logged in as <span id="user-name" style="font-weight: bold;"></span>.</p>
+            <button id="logout-btn" class="cta-btn" style="margin-top: 24px;">Logout</button>
+            <br>
+            <br>
         </div>
 
         <!-- DataTable -->
@@ -208,6 +211,30 @@
                     });
             })
             .catch(err => console.warn('Optional role-based header loading skipped:', err));
+
+             // Logout button logic
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function () {
+                fetch('/api/logout', {
+                    method: 'POST',
+                    credentials: 'include',
+                })
+                .then(res => {
+                    if (res.ok) {
+                        localStorage.removeItem('auth_token');
+                        localStorage.removeItem('user');
+                        window.location.href = '/login';
+                    } else {
+                        alert('Logout failed.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Logout error:', err);
+                    alert('An error occurred during logout.');
+                });
+            });
+        }
 
         let itemStatuses = [];
 

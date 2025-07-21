@@ -15,7 +15,7 @@
         }
         body {
             font-family: 'CustomFont', 'Segoe UI', Arial, sans-serif;
-            background: url('/wallpaper.jpg') no-repeat center center fixed;
+            background: url('/wallpaper-admin.jpeg') no-repeat center center fixed;
             background-size: cover;
             margin: 0;
             padding: 0;
@@ -102,7 +102,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script>
         // Dynamically load header and footer
-        fetch('/header.html')
+        fetch('/header-admin.html')
             .then(res => res.text())
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;

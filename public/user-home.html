@@ -119,14 +119,15 @@
             Welcome to GachaGoods! Discover exclusive otaku merchandise, mystery gachapon items, and limited-edition collectibles. Dive into the world of anime, games, and pop culture—one surprise at a time!
         </p>
 
-        <div id="user-info-box" style="margin-top:30px;">
+        <div id="user-info-box" style="margin-top:48px;">
     <h2>Hello, <span id="user-name"></span>!</h2>
     <p>Email: <span id="user-email"></span></p>
     <p>Role: <span id="user-role"></span></p>
+    <button id="logout-btn" class="cta-btn" style="margin-top: 24px;">Logout</button>
 </div>
-
+<br> 
         <!-- Video -->
-        <div style="margin-bottom:32px;">
+        <div style="margin-bottom:48px;">
             <iframe width="100%" height="505" src="https://www.youtube.com/embed/sdtvUYXbWw4" 
                 title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                 allowfullscreen style="border-radius:10px;max-width:100%;"></iframe>
@@ -151,6 +152,7 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <script>
+    document.addEventListener('DOMContentLoaded', function () {
         // Load default header first
         fetch('/header-user.html')
             .then(res => res.text())
@@ -180,11 +182,9 @@
             .catch(err => console.warn('Optional role-based header loading skipped:', err));
 
         // Autocomplete logic
-        $(document).ready(function () {
-            $.get('/api/item-names', function (data) {
-                $("#search-bar").autocomplete({
-                    source: data
-                });
+        $.get('/api/item-names', function (data) {
+            $("#search-bar").autocomplete({
+                source: data
             });
         });
 
@@ -192,16 +192,50 @@
         $("#search-btn").click(function () {
             const query = $("#search-bar").val().trim();
             if (query) {
-                // Optionally call backend to log or validate search
                 $.post('/api/search', { query: query }, function () {
-                    // Redirect to search results page with query param
                     window.location.href = `/search-results.html?query=${encodeURIComponent(query)}`;
                 }).fail(function () {
                     alert("Failed to process search. Please try again.");
                 });
             }
         });
-    </script>
+
+        // Logout button click handler
+        const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', function () {
+        const token = localStorage.getItem('auth_token');
+
+        if (!token) {
+            alert('No auth token found. You may already be logged out.');
+            return;
+        }
+
+        fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(res => {
+            if (res.ok) {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+            } else {
+                alert('Logout failed.');
+            }
+        })
+        .catch(err => {
+            console.error('Logout error:', err);
+            alert('An error occurred during logout.');
+        });
+    });
+}
+
+    });
+</script>
 </body>
 
 <script src="/js/session-middleware.js"></script>
