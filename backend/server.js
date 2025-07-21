@@ -759,22 +759,29 @@ doc.end();
     });
 });
 
-// Logout API
+// POST /api/logout
 app.post('/api/logout', async (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1]; // e.g. "Bearer abc123"
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-        return res.status(401).json({ error: 'No token provided.' });
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Invalid or missing Authorization header.' });
     }
 
+    const token = authHeader.split(' ')[1];
+
     try {
-        const [result] = await db.query('UPDATE users SET auth_token = NULL WHERE auth_token = ?', [token]);
+        const [result] = await db.query(
+            'UPDATE users SET auth_token = NULL WHERE auth_token = ?',
+            [token]
+        );
 
         if (result.affectedRows === 0) {
             return res.status(400).json({ error: 'Invalid token or user not found.' });
         }
 
-        res.json({ message: 'Successfully logged out.' });
+        console.log(`[LOGOUT] User with token ${token.slice(0, 8)}... logged out`);
+
+        res.status(200).json({ success: true, message: 'Successfully logged out.' });
     } catch (err) {
         console.error('Logout error:', err);
         res.status(500).json({ error: 'Server error during logout.' });

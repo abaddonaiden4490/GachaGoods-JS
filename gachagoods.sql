@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2025 at 03:31 AM
+-- Generation Time: Jul 21, 2025 at 07:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -325,7 +325,7 @@ CREATE TABLE `purchased` (
 
 INSERT INTO `purchased` (`id`, `user_id`, `product_id`, `quantity`, `price`, `total_price`, `status_id`) VALUES
 (1, 2, 1, 5, 77.78, 388.90, 1),
-(2, 21, 32, 10, 99.99, 999.90, 2);
+(2, 21, 32, 10, 99.99, 999.90, 4);
 
 -- --------------------------------------------------------
 
@@ -451,8 +451,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `status_id`, `role_id`, `auth_token`) VALUES
-(1, 'Admin Gacha', 'admin@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 1, NULL),
-(2, 'Aqua Minato', 'aqua@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
+(1, 'Admin Gacha', 'admin@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkFkbWluIEdhY2hhIiwiZW1haWwiOiJhZG1pbkBnYWNoYWdvb2RzLmNvbSIsInJvbGVfaWQiOjEsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUzMDc1MzEyLCJleHAiOjE3NTMwNzg5MTJ9.vzelYujvviUzZqu6YblamSogd56fsDoIcN-rXxWcXDs'),
+(2, 'Aqua Minato', 'aqua@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6IkFxdWEgTWluYXRvIiwiZW1haWwiOiJhcXVhQGdhY2hhZ29vZHMuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTMwNzUyNzksImV4cCI6MTc1MzA3ODg3OX0.omNHO8U8whZrdr1chcuLGs_BMPQY8xO--b0m18qUtdI'),
 (3, 'Kizuna AI', 'kizuna@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (4, 'Rem', 'rem@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (5, 'Emilia', 'emilia@gachagoods.com', '2025-07-04 02:04:32', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
@@ -467,12 +467,12 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL),
 (16, 'Piad', 'evanpiad05@gmail.com', NULL, '$2b$10$gbcca1Ae0TcJtJIQmmXGBejJBah9rX73UdE7iNeP01fm1pXStVlDS', 1, 2, NULL),
-(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5hbWUiOiJKZW11ZWwgbWFsYWdhIiwiZW1haWwiOiJqb3NoYmVybmFiZTA4MjlAZ21haWwuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTI3NjU0MDEsImV4cCI6MTc1Mjc2OTAwMX0.FZu67GMpnmbXY_uZzsxNSZcMuVkS2pcZyyBiMhCfTog'),
+(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5hbWUiOiJKZW11ZWwgbWFsYWdhIiwiZW1haWwiOiJqb3NoYmVybmFiZTA4MjlAZ21haWwuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTMwNzUyNTgsImV4cCI6MTc1MzA3ODg1OH0.r14EL-0da-YtVu685aqBZWJ51sSCgJRXU0MdfYHXqxc'),
 (18, 'Alvin Yago Comp Org', 'loisegarcia07@gmail.com', NULL, '$2b$10$4vYEJ5Oy3cU1t6SDNGkfx.ZsaBfoMDvY9IQBJq9sbFpe1p9ziEsYi', 1, 2, NULL),
 (19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 2, NULL),
 (20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 1, 2, NULL),
-(21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, NULL),
-(22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, NULL),
+(21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsIm5hbWUiOiJSb3ZpYyBBYm9uaXRhIiwiZW1haWwiOiJheGlzdGhlbWluZWNyYWZ0ZXhwZXJ0QGdtYWlsLmNvbSIsInJvbGVfaWQiOjIsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUzMDczMjA1LCJleHAiOjE3NTMwNzY4MDV9.cEI74SwPuvmSt1hDXbnZYC2f5PQwhu5jTMmniXLC2LQ'),
+(22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsIm5hbWUiOiJDaGVsdmluIENhbXBvcyIsImVtYWlsIjoic2FraXRlbm1hMTc2QGdtYWlsLmNvbSIsInJvbGVfaWQiOjEsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUzMDczNzI2LCJleHAiOjE3NTMwNzczMjZ9.g_g-A61RvZ7qGADET5PkBHl23VWelf-PIFabxqLdJw8'),
 (23, 'NISTOR VALDES', 'mosyhub@gmail.com', NULL, '$2b$10$sN6ef8fCUh4DvR2lLlieL.ESEILmPXPGgP7nok8QhewZb0f9QxvJa', 2, 2, NULL),
 (24, 'KiM MARiELLE PLANiLLO', 'mthreeelefex@gmail.com', NULL, '$2b$10$GtYuCo9rM79AnVmgBprE9.UO1WFRDYvI7pAtyQaTFBFK2tt/qefjO', 1, 2, NULL),
 (25, 'Lappay Grande', 'juskolord2ndyearkanawalakapangsirdalisay@gmail.com', NULL, '$2b$10$DhyhnlvhRHsxp./9ykkuD.YaRbi9YqrpquZxWP0.UPPb.8LXJoJIC', 1, 2, NULL),
