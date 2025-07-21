@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2025 at 03:15 PM
+-- Generation Time: Jul 21, 2025 at 03:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -172,7 +172,9 @@ INSERT INTO `items` (`id`, `name`, `description`, `price`, `category_id`, `type_
 (46, 'YUKiNA MiNATO', 'bandori', 99.99, 8, 31, NULL, NULL),
 (47, 'KASUMi TOYAMA', 'toyama grupo', 99.99, 8, 12, NULL, NULL),
 (48, 'ee', 'ee', 99.99, 16, 1, NULL, NULL),
-(49, 'AiSCREAM Hoodie', 'RUBY CHAN? HAI? NANI GA SUKI?? CHOKO MINTO YORI NO ANATA!! >:(', 99.99, 9, 7, NULL, NULL);
+(49, 'AiSCREAM Hoodie', 'RUBY CHAN? HAI? NANI GA SUKI?? CHOKO MINTO YORI NO ANATA!! >:(', 99.99, 9, 7, NULL, NULL),
+(51, 'Tokai Teio Plushie', 'HACHiMi', 12.34, 12, 3, NULL, NULL),
+(53, 'sampol lang to', 'wala to', 99.99, 16, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -211,7 +213,13 @@ INSERT INTO `item_images` (`id`, `item_id`, `image_path`) VALUES
 (18, 49, '/uploads/1753089846638.jpg'),
 (19, 49, '/uploads/1753089846641.jpeg'),
 (20, 49, '/uploads/1753089846641.jpeg'),
-(21, 49, '/uploads/1753089846642.jpg');
+(21, 49, '/uploads/1753089846642.jpg'),
+(22, 51, '/uploads/1753103964067.png'),
+(23, 51, '/uploads/1753103964073.png'),
+(24, 51, '/uploads/1753103964076.png'),
+(25, 51, '/uploads/1753103964080.png'),
+(26, 53, '/uploads/1753105022303.jpeg'),
+(27, 53, '/uploads/1753105022305.png');
 
 -- --------------------------------------------------------
 
@@ -336,8 +344,9 @@ INSERT INTO `purchased` (`id`, `user_id`, `product_id`, `quantity`, `price`, `to
 (2, 21, 32, 10, 99.99, 999.90, 1),
 (3, 17, 22, 10, 79.84, 798.40, 2),
 (4, 21, 2, 1, 62.35, 62.35, 1),
-(5, 21, 3, 3, 44.31, 132.93, 1),
-(6, 21, 42, 99, 69.99, 6929.01, 1);
+(5, 21, 3, 3, 44.31, 132.93, 4),
+(6, 21, 42, 99, 69.99, 6929.01, 2),
+(7, 21, 39, 70, 99.99, 6999.30, 2);
 
 -- --------------------------------------------------------
 
@@ -479,15 +488,15 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `st
 (14, 'Naruto', 'naruto@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 1, 2, NULL),
 (15, 'Inactive Otaku', 'inactive@gachagoods.com', '2025-07-04 02:04:33', '$2b$10$JNr13sp2zGQ.3dyWJQA44ehs53my0OVgPpfHsz7XihbCp/AcCJh5y', 2, 2, NULL),
 (16, 'Piad', 'evanpiad05@gmail.com', NULL, '$2b$10$gbcca1Ae0TcJtJIQmmXGBejJBah9rX73UdE7iNeP01fm1pXStVlDS', 1, 2, NULL),
-(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, NULL),
+(17, 'Jemuel malaga', 'joshbernabe0829@gmail.com', NULL, '$2b$10$k1yTKP1/GJ/uabvDX.mVs.ty8y7KAg98JZdtF7Ff2YpmBs8KRE3Xa', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsIm5hbWUiOiJKZW11ZWwgbWFsYWdhIiwiZW1haWwiOiJqb3NoYmVybmFiZTA4MjlAZ21haWwuY29tIiwicm9sZV9pZCI6Miwic3RhdHVzX2lkIjoxLCJpYXQiOjE3NTMxMDU2MDQsImV4cCI6MTc1MzEwOTIwNH0.Wj5F303rqJh5nND980_wF6aYnfvLk46f6AUa7XBYEfc'),
 (18, 'Alvin Yago Comp Org', 'loisegarcia07@gmail.com', NULL, '$2b$10$4vYEJ5Oy3cU1t6SDNGkfx.ZsaBfoMDvY9IQBJq9sbFpe1p9ziEsYi', 1, 2, NULL),
-(19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 2, NULL),
-(20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 1, 2, NULL),
-(21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsIm5hbWUiOiJSb3ZpYyBBYm9uaXRhIiwiZW1haWwiOiJheGlzdGhlbWluZWNyYWZ0ZXhwZXJ0QGdtYWlsLmNvbSIsInJvbGVfaWQiOjIsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUzMTAwODk5LCJleHAiOjE3NTMxMDQ0OTl9.lCy_qUcPBW-nDuDBuyYZZs_8XHK-DkQfIMiUeORvfSM'),
+(19, 'ADEALIX JAIRON MARANAN', 'johndoughpractice@gmail.com', NULL, '$2b$10$kyZaf1MjsRB0vxx0rv4Wcuy31iJ.IzEz92TpunWwG3u1.c9ItsB62', 1, 1, NULL),
+(20, 'JastineTomonComprog3Kahit2ndYear', 'roshielbernabe@yahoo.com.ph', NULL, '$2b$10$rTcwg/DaEOw3yaTg6ynPseRwEwVodHqfoXrZN0KpkSE8.iGTVjDk2', 2, 2, NULL),
+(21, 'Rovic Abonita', 'axistheminecraftexpert@gmail.com', NULL, '$2b$10$d0cjFIYi4V2fhS4BLNQxmOFYLpCSUzkZJ6YpXFjsxGLNnP90B7aB6', 1, 2, NULL),
 (22, 'Chelvin Campos', 'sakitenma176@gmail.com', NULL, '$2b$10$dkI6kDNcCH2YIRcgNPW2euMQj.zVpa78LO38qQcypOXdEhqyr9eh6', 1, 1, NULL),
 (23, 'NISTOR VALDES', 'mosyhub@gmail.com', NULL, '$2b$10$sN6ef8fCUh4DvR2lLlieL.ESEILmPXPGgP7nok8QhewZb0f9QxvJa', 2, 2, NULL),
-(24, 'KiM MARiELLE PLANiLLO', 'mthreeelefex@gmail.com', NULL, '$2b$10$GtYuCo9rM79AnVmgBprE9.UO1WFRDYvI7pAtyQaTFBFK2tt/qefjO', 1, 2, NULL),
-(25, 'Lappay Grande', 'juskolord2ndyearkanawalakapangsirdalisay@gmail.com', NULL, '$2b$10$DhyhnlvhRHsxp./9ykkuD.YaRbi9YqrpquZxWP0.UPPb.8LXJoJIC', 1, 2, NULL),
+(24, 'KiM MARiELLE PLANiLLO', 'mthreeelefex@gmail.com', NULL, '$2b$10$GtYuCo9rM79AnVmgBprE9.UO1WFRDYvI7pAtyQaTFBFK2tt/qefjO', 2, 2, NULL),
+(25, 'Lappay Grande', 'juskolord2ndyearkanawalakapangsirdalisay@gmail.com', NULL, '$2b$10$DhyhnlvhRHsxp./9ykkuD.YaRbi9YqrpquZxWP0.UPPb.8LXJoJIC', 1, 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsIm5hbWUiOiJMYXBwYXkgR3JhbmRlIiwiZW1haWwiOiJqdXNrb2xvcmQybmR5ZWFya2FuYXdhbGFrYXBhbmdzaXJkYWxpc2F5QGdtYWlsLmNvbSIsInJvbGVfaWQiOjEsInN0YXR1c19pZCI6MSwiaWF0IjoxNzUzMTA1MjQ1LCJleHAiOjE3NTMxMDg4NDV9.G96kjJp2JsKcaH1mVNdrTSoh3pItICbakeOvgCRh5cU'),
 (26, 'Jexel Manalo', '2ndyearvisualbasic@gmail.com', NULL, '$2b$10$dT1P3u9gTXFeuEg8.Bw1HeqHGV6tA.6wyl8EtGvOgE3HrF.Rhmiqm', 1, 2, NULL),
 (27, 'Jett axel talaba', 'oystersss@gmail.com', NULL, '$2b$10$vAMPCdlCiqBpVkXu7Ffl5.ROTEzvMZ05NVuzAB09FUsDA9LoYwH9S', 1, 1, NULL),
 (28, 'FLINT CELETARIA THE GREAT', 'flintaxl05@gmail.com', NULL, '$2b$10$6cdIg09XfVvhrEtiL5vVm.zptKwYW5TjaApxYWdnDUUHJ8pNs6osG', 2, 2, NULL);
@@ -623,13 +632,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -641,13 +650,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `item_images`
 --
 ALTER TABLE `item_images`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `item_status`
@@ -677,7 +686,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `purchased`
 --
 ALTER TABLE `purchased`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `reviews`
